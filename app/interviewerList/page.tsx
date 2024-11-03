@@ -42,10 +42,10 @@ export default function InterviewerList() {
   console.log(pathname)
   // const category = router.query.category;
 
-  const searchParams = useSearchParams();
-  console.log(searchParams)
-  const queryParamValue = searchParams.get('name');
-  console.log(queryParamValue)
+  // const searchParams = useSearchParams();
+  // console.log(searchParams)
+  // const queryParamValue = searchParams.get('name');
+  // console.log(queryParamValue)
 
   const fetchInterviewers = useCallback(async (search: string = "") => {
 
@@ -53,8 +53,11 @@ export default function InterviewerList() {
     setError(null)
     try {
       // search="A";
-      const response = await axios.get<Interviewer[]>(url, {
-        params: { 'search': search }
+      // const response = await axios.get<Interviewer[]>(url, {
+      //   params: { 'search': "A" }
+      // })
+      const response = await axios.get(url, {
+        params: { 'search': "A" }
       })
       setInterviewers(response.data.mockInterviewers)
       console.log(response)
