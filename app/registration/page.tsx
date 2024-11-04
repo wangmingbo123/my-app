@@ -8,11 +8,13 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
-// import { useToast } from "@/components/ui/use-toast"
 import { useToast } from "@/hooks/use-toast"
+import { Loader2 } from "lucide-react"
+import { useRouter, usePathname } from 'next/navigation';
 
 
 export default function InterviewerRegistration() {
+  const router = useRouter()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const { toast } = useToast()
   const [formData, setFormData] = useState({
@@ -38,9 +40,17 @@ export default function InterviewerRegistration() {
     e.preventDefault()
     setIsSubmitting(true)
     try {
-      // Replace with your actual API endpoint
-      console.log(formData)
-      const response = await axios.post('https://api.example.com/register-interviewer', formData)
+
+      const body = {
+        ...formData,
+        "price": formData.hourlyRate,
+        "userId": 5
+      }
+      console.log(body)
+      const url = "https://noxious-spooky-cauldron-v6rgv6j7xq9hwv6r-3000.app.github.dev/api/add"
+      // const url = "https://smart-excel-ai-omega-six.vercel.app/api/add"
+
+      const response = await axios.post(url, body)
       console.log(response.data)
       toast({
         title: "Registration Successful",
@@ -55,9 +65,11 @@ export default function InterviewerRegistration() {
         bio: "",
         selfIntroduction: "",
       })
+      // 返回首页
+      router.push("/interviewerList")
+
     } catch (error) {
       console.error('Error submitting form:', error)
-      console.error('Error submitting form111')
       toast({
         title: "Registration Failed",
         description: "There was an error submitting your registration. Please try again.",
@@ -78,26 +90,28 @@ export default function InterviewerRegistration() {
         <CardContent className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="name">Full Name</Label>
-            <Input 
-              id="name" 
+            <Input
+              id="name"
               name="name"
               value={formData.name}
               onChange={handleInputChange}
+              required
             />
           </div>
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
-            <Input 
-              id="email" 
+            <Input
+              id="email"
               name="email"
-              type="email" 
+              type="email"
               value={formData.email}
               onChange={handleInputChange}
+              required
             />
           </div>
           <div className="space-y-2">
             <Label htmlFor="expertise">Area of Expertise</Label>
-            <Select onValueChange={handleSelectChange} value={formData.expertise}>
+            <Select onValueChange={handleSelectChange} value={formData.expertise} required>
               <SelectTrigger id="expertise">
                 <SelectValue placeholder="Select your area of expertise" />
               </SelectTrigger>
@@ -112,47 +126,62 @@ export default function InterviewerRegistration() {
           </div>
           <div className="space-y-2">
             <Label htmlFor="experience">Years of Experience</Label>
-            <Input 
-              id="experience" 
+            <Input
+              id="experience"
               name="experience"
+              type="number"
+              min="0"
               value={formData.experience}
               onChange={handleInputChange}
+              required
             />
           </div>
           <div className="space-y-2">
             <Label htmlFor="hourlyRate">Hourly Rate ($)</Label>
-            <Input 
-              id="hourlyRate" 
+            <Input
+              id="hourlyRate"
               name="hourlyRate"
-              type="number" 
+              type="number"
+              min="0"
+              step="0.01"
               value={formData.hourlyRate}
               onChange={handleInputChange}
+              required
             />
           </div>
           <div className="space-y-2">
             <Label htmlFor="bio">Short Bio</Label>
-            <Textarea 
-              id="bio" 
+            <Textarea
+              id="bio"
               name="bio"
               value={formData.bio}
               onChange={handleInputChange}
+              required
             />
           </div>
           <div className="space-y-2">
             <Label htmlFor="selfIntroduction">Self-Introduction</Label>
-            <Textarea 
-              id="selfIntroduction" 
+            <Textarea
+              id="selfIntroduction"
               name="selfIntroduction"
               value={formData.selfIntroduction}
               onChange={handleInputChange}
               placeholder="Provide a detailed self-introduction. This will be shown to potential clients."
               className="h-32"
+              required
             />
           </div>
         </CardContent>
         <CardFooter>
           <Button type="submit" className="w-full" disabled={isSubmitting}>
-            {isSubmitting ? "Submitting..." : "Register"}
+            {isSubmitting ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Submitting...
+              </>
+            ) : (
+              'Register'
+            )}
           </Button>
         </CardFooter>
       </form>
