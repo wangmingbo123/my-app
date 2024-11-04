@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Calendar, Clock, DollarSign, Star } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
@@ -10,11 +10,15 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
+import InterviewerList from "@/components/BottomBar"
+import axios from "axios"
 
 // Mock data for user's orders
-const orders = [
+const orders1 = [
   {
     id: 1,
+    userId: 1,
+    interviewerId: 1,
     interviewerName: "Alice Johnson",
     interviewerAvatar: "/placeholder.svg?height=50&width=50",
     expertise: "Frontend Development",
@@ -27,6 +31,8 @@ const orders = [
   },
   {
     id: 2,
+    userId: 1,
+    interviewerId: 1,
     interviewerName: "Bob Smith",
     interviewerAvatar: "/placeholder.svg?height=50&width=50",
     expertise: "Backend Development",
@@ -39,6 +45,8 @@ const orders = [
   },
   {
     id: 3,
+    userId: 1,
+    interviewerId: 1,
     interviewerName: "Carol Williams",
     interviewerAvatar: "/placeholder.svg?height=50&width=50",
     expertise: "Full Stack Development",
@@ -57,6 +65,32 @@ export default function UserOrderList() {
   const [selectedOrder, setSelectedOrder] = useState(null)
   const [rating, setRating] = useState(0)
   const [reviewText, setReviewText] = useState("")
+  const [orders, setOrders] = useState(null)
+
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    const fetchOrders = async () => {
+      setIsLoading(true)
+      setError(null)
+      try {
+        //todo:拿到userid
+
+        const url = "https://smart-excel-ai-omega-six.vercel.app/api/orderList?userId=" + 1
+        const response = await axios.get(url)
+        console.log(response.data.orders)
+        setOrders(response.data.orders)
+      } catch (err) {
+        setError('Failed to fetch orders. Please try again later.')
+        console.error('Error fetching orders:', err)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+    fetchOrders()
+  }, [])
+
 
   const handleReschedule = (order) => {
     setSelectedOrder(order)
@@ -81,12 +115,17 @@ export default function UserOrderList() {
     console.log("Submitting review for order:", selectedOrder, "Rating:", rating, "Review:", reviewText)
     setIsReviewOpen(false)
     // Update the order to mark it as reviewed
-    const updatedOrders = orders.map(order => 
+    const updatedOrders = orders.map(order =>
       order.id === selectedOrder.id ? { ...order, reviewed: true } : order
     )
     // In a real application, you would update this state properly
     console.log("Updated orders:", updatedOrders)
   }
+  // 按照条件展示不同页面
+  if (!orders) {
+    return <div>Loading</div>
+  }
+
 
   return (
     <div className="container mx-auto p-4">
@@ -119,9 +158,8 @@ export default function UserOrderList() {
                   <span>${order.price}</span>
                 </div>
                 <div>
-                  <span className={`px-2 py-1 rounded-full text-sm ${
-                    order.status === 'Completed' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800'
-                  }`}>
+                  <span className={`px-2 py-1 rounded-full text-sm ${order.status === 'Completed' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800'
+                    }`}>
                     {order.status}
                   </span>
                 </div>

@@ -4,22 +4,38 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import Link from "next/link"
-import { useRouter } from "next/navigation"
+import { useParams, useRouter, useSearchParams } from "next/navigation"
 // import { useRouter } from "next/router"
 
 import Router from 'next/router'
+import { useEffect, useState } from "react"
+import axios from "axios"
+import { Skeleton } from "@/components/ui/skeleton"
 
 // Mock data for the completed payment
-const paymentDetails = {
-    orderId: "ORD-12345",
-    interviewerName: "Alice Johnson",
-    interviewerAvatar: "/placeholder.svg?height=50&width=50",
-    expertise: "Frontend Development",
-    date: "2023-07-01",
-    time: "14:00",
-    duration: 60,
-    price: 50,
-}
+// const paymentDetails = {
+//     orderId: "ORD-12345",
+//     interviewerName: "Alice Johnson",
+//     interviewerAvatar: "/placeholder.svg?height=50&width=50",
+//     expertise: "Frontend Development",
+//     date: "2023-07-01",
+//     time: "14:00",
+//     duration: 60,
+//     price: 50,
+// }
+
+// {id: 3, userId: 1, interviewerId: 4, interviewerName: null, interviewerAvatar: null, …}
+
+// interface PaymentDetails {
+//     orderId: string;
+//     interviewerName: string;
+//     interviewerAvatar: string;
+//     expertise: string;
+//     date: string;
+//     time: string;
+//     duration: number;
+//     price: number;
+// }
 
 
 
@@ -29,6 +45,14 @@ export default function PaymentConfirmation() {
     const handleComplete = () => {
         router.push("/interviewerList?name=mmm") // This will take the user back to the interviewer detail page
     }
+    // const params = useParams()
+    // console.log(params)
+    // console.log(params["slug"])
+
+    const searchParams = useSearchParams();
+    console.log(searchParams)
+    const orderId = searchParams.get('orderId');
+    console.log(orderId)
 
     // const handleComplete = () =>        {
     //     Router.push("/interviewerList?name=1")
@@ -39,6 +63,80 @@ export default function PaymentConfirmation() {
     //     query: { name: 'Zeit' }
     // })
 
+
+    const [paymentDetails, setPaymentDetails] = useState(null)
+    const [isLoading, setIsLoading] = useState(true)
+    const [error, setError] = useState<string | null>(null)
+
+    useEffect(() => {
+        const fetchPaymentData = async () => {
+            try {
+
+                const url = "https://smart-excel-ai-omega-six.vercel.app/api/orderDetail/" + orderId;
+                // Replace with your actual API endpoint
+                const response = await axios.get(url)
+                console.log(response)
+                console.log(response.data.paymentDetails)
+                let paymentDetails = response.data.paymentDetails
+                // paymentDetails['price'] = 50
+                paymentDetails['orderId'] = paymentDetails['id']
+                paymentDetails['duration'] = 60
+                paymentDetails['date'] = "2023-07-01"
+                paymentDetails['time'] = "14:00"
+
+                setPaymentDetails(paymentDetails)
+            } catch (err) {
+                setError('Failed to fetch payment data. Please try again later.')
+            } finally {
+                setIsLoading(false)
+            }
+        }
+
+        fetchPaymentData()
+    }, [])
+
+    if (isLoading) {
+        return (
+            <div className="container mx-auto p-4 max-w-md">
+                <Card>
+                    <CardHeader>
+                        <Skeleton className="h-8 w-3/4 mb-2" />
+                        <Skeleton className="h-4 w-1/2" />
+                    </CardHeader>
+                    <CardContent>
+                        <Skeleton className="h-4 w-full mb-2" />
+                        <Skeleton className="h-4 w-3/4 mb-2" />
+                        <Skeleton className="h-4 w-1/2" />
+                    </CardContent>
+                    <CardFooter>
+                        <Skeleton className="h-10 w-full" />
+                    </CardFooter>
+                </Card>
+            </div>
+        )
+    }
+
+    if (error) {
+        return (
+            <div className="container mx-auto p-4 max-w-md">
+                <Card>
+                    <CardHeader>
+                        <CardTitle className="text-xl font-semibold text-red-600">Error</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <p>{error}</p>
+                    </CardContent>
+                    <CardFooter>
+                        <Button onClick={() => router.push('/')}>Return to Home</Button>
+                    </CardFooter>
+                </Card>
+            </div>
+        )
+    }
+
+    if (!paymentDetails) {
+        return null
+    }
 
 
 

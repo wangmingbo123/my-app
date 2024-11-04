@@ -91,7 +91,7 @@ export default function InterviewerDetail() {
 
 
 
-  const handlePayment = async (id) => {
+  const handlePayment = async (id, price) => {
     console.log("handlePayment " + id)
     setIsProcessingPayment(true)
     // 调用支付接口 userid, order id,product id , amount
@@ -100,13 +100,19 @@ export default function InterviewerDetail() {
     const payUrl = "https://smart-excel-ai-omega-six.vercel.app/api/orderAdd";
     const pay = async () => {
       try {
-        const response = await axios.post(payUrl, {
+        const param = {
           userId: 1,
-          orderId: 1,
-          productId: 1,
-          amount: 100,
-          interviewerId: 1
+          interviewerId: id,
+          interviewerName: interviewer.name,
+          interviewerAvatar: interviewer.avatar,
+          expertise: interviewer.expertise,
+          price: price,
+          status: "Upcoming"
+        }
+        const response = await axios.post(payUrl, {
+          ...param
         })
+        console.log(param)
         console.log(response)
         setIsProcessingPayment(false)
         setIsBookingOpen(false)
@@ -115,7 +121,7 @@ export default function InterviewerDetail() {
           description: `You have successfully booked a session with ${interviewer.name}.`,
           duration: 3000,
         })
-        return response.data.orderId || 9
+        return response.data.orderId
         // console.log(interviewerMap)
       } catch (err) {
         console.error("Error fetching interviewers:", err)
@@ -126,11 +132,20 @@ export default function InterviewerDetail() {
 
     }
     const orderId = await pay()
+    if (!orderId) {
+      toast({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description: "There was a problem with your request.",
+        duration: 3000,
+      })
+      return
+    }
     // Simulate payment process
     // await new Promise(resolve => setTimeout(resolve, 2000))
 
     // 跳转到支付完成页
-    router.push("/paymentConfirmation?orderId="+orderId) // This will take the user back to the interviewer detail page
+    router.push("/paymentConfirmation?orderId=" + orderId) // This will take the user back to the interviewer detail page
   }
   const url = "https://smart-excel-ai-omega-six.vercel.app/api/interviewerDetail/" + params["slug"];
   const fetchData = async () => {
@@ -145,8 +160,8 @@ export default function InterviewerDetail() {
         ...interviewerNeedMerge
       }
       // interviewerMap["name"] = response.data.interviewer["name"]
-      console.log(interviewerMap)
-      setInterviewer(interviewerMap)
+      // console.log(interviewerMap)
+      setInterviewer(response.data.interviewer)
       // console.log(interviewerMap)
     } catch (err) {
       console.error("Error fetching interviewers:", err)
@@ -203,7 +218,7 @@ export default function InterviewerDetail() {
           <section>
             <h2 className="text-2xl font-semibold mb-2">Skills</h2>
             <div className="flex flex-wrap gap-2">
-              {interviewer.skills.map((skill, index) => (
+              {interviewer.skills?.map((skill, index) => (
                 <span key={index} className="bg-primary text-primary-foreground px-3 py-1 rounded-full text-sm">
                   {skill}
                 </span>
@@ -213,7 +228,7 @@ export default function InterviewerDetail() {
           <section>
             <h2 className="text-2xl font-semibold mb-2">Languages</h2>
             <ul className="list-disc list-inside">
-              {interviewer.languages.map((language, index) => (
+              {interviewer.languages?.map((language, index) => (
                 <li key={index}>{language}</li>
               ))}
             </ul>
@@ -262,7 +277,7 @@ export default function InterviewerDetail() {
               </form>
               <DialogFooter className="flex sm:justify-center space-x-3">
                 <Button variant="outline" onClick={() => setIsBookingOpen(false)}>Cancel</Button>
-                <Button onClick={() => handlePayment(interviewer.id)} disabled={isProcessingPayment}>
+                <Button onClick={() => handlePayment(interviewer.id, interviewer.price)} disabled={isProcessingPayment}>
                   {isProcessingPayment ? "Processing..." : `Pay $${interviewer.price}`}
                 </Button>
               </DialogFooter>
