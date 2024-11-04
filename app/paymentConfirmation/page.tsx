@@ -99,9 +99,9 @@ export default function PaymentConfirmation() {
                     </Button>
                 </CardFooter>
             </Card>
-            <Button onClick={handleComplete} variant="outline" >
+            {/* <Button onClick={handleComplete} variant="outline" >
                 Go to interviewerList
-            </Button>
+            </Button> */}
 
         </div>
     )

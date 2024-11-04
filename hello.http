@@ -1,0 +1,23 @@
+# 需要安装 REST Client
+
+###
+POST https://noxious-spooky-cauldron-v6rgv6j7xq9hwv6r-3000.app.github.dev/api/add
+Content-Type: application/json
+
+{
+  "userId": 2,
+  "name": 1,
+  "email": 1,
+  "expertise": 1
+}
+
+
+
+###
+POST https://noxious-spooky-cauldron-v6rgv6j7xq9hwv6r-3000.app.github.dev/api/orderAdd
+Content-Type: application/json
+
+{
+  "userId": 2,
+  "interviewerId": 1
+}

@@ -14,7 +14,7 @@ import { useParams, useRouter } from "next/navigation"
 import axios from "axios"
 
 // Mock data for the interviewer
-const interviewer = {
+const interviewerNeedMerge = {
   id: 1,
   name: "Alice Johnson",
   expertise: "Frontend Development",
@@ -58,50 +58,122 @@ const ordersAndReviews = [
   },
 ]
 
+interface Interviewer {
+  id: number;
+  name: string;
+  expertise: string;
+  experience: string;
+  price: number;
+  avatar: string;
+  bio: string;
+  selfIntroduction: string;
+  skills: string[];
+  languages: string[];
+  availability: string;
+  rating: number;
+  reviewCount: number;
+}
+
 export default function InterviewerDetail() {
   const [isBookingOpen, setIsBookingOpen] = useState(false)
   const [isProcessingPayment, setIsProcessingPayment] = useState(false)
+  const [interviewer, setInterviewer] = useState(null)
+
+  const [isLoading, setIsLoading] = useState(false)
+
+
   const { toast } = useToast()
 
   const params = useParams()
   console.log(params)
+  console.log(params["slug"])
   const router = useRouter()
 
-  const handlePayment = async () => {
+
+
+  const handlePayment = async (id) => {
+    console.log("handlePayment " + id)
     setIsProcessingPayment(true)
     // 调用支付接口 userid, order id,product id , amount
     // todo:
-
-
-    // Simulate payment process
-    await new Promise(resolve => setTimeout(resolve, 2000))
-    setIsProcessingPayment(false)
-    setIsBookingOpen(false)
-    toast({
-      title: "Payment Successful",
-      description: `You have successfully booked a session with ${interviewer.name}.`,
-      duration: 3000,
-    })
-    // 跳转到支付完成页
-    router.push("/paymentConfirmation?name=mmm") // This will take the user back to the interviewer detail page
-  }
-  const url = "https://smart-excel-ai-omega-six.vercel.app/api/learn"
-
-  useEffect(() => {
-    const fetchData = async () => {
+    // 1. 通过接口获取订单信息
+    const payUrl = "https://smart-excel-ai-omega-six.vercel.app/api/orderAdd";
+    const pay = async () => {
       try {
-        const response = await axios.get(url, {
-          params: { 'search': "A" }
+        const response = await axios.post(payUrl, {
+          userId: 1,
+          orderId: 1,
+          productId: 1,
+          amount: 100,
+          interviewerId: 1
         })
         console.log(response)
+        setIsProcessingPayment(false)
+        setIsBookingOpen(false)
+        toast({
+          title: "Payment Successful",
+          description: `You have successfully booked a session with ${interviewer.name}.`,
+          duration: 3000,
+        })
+        return response.data.orderId || 9
+        // console.log(interviewerMap)
       } catch (err) {
         console.error("Error fetching interviewers:", err)
       } finally {
+        setIsProcessingPayment(false)
+        setIsBookingOpen(false)
       }
-    };
+
+    }
+    const orderId = await pay()
+    // Simulate payment process
+    // await new Promise(resolve => setTimeout(resolve, 2000))
+
+    // 跳转到支付完成页
+    router.push("/paymentConfirmation?orderId="+orderId) // This will take the user back to the interviewer detail page
+  }
+  const url = "https://smart-excel-ai-omega-six.vercel.app/api/interviewerDetail/" + params["slug"];
+  const fetchData = async () => {
+    try {
+      setIsLoading(true)
+      const response = await axios.get(url, {
+        params: { 'search': "A" }
+      })
+      console.log(response.data.interviewer)
+      let interviewerMap = {
+        ...response.data.interviewer,
+        ...interviewerNeedMerge
+      }
+      // interviewerMap["name"] = response.data.interviewer["name"]
+      console.log(interviewerMap)
+      setInterviewer(interviewerMap)
+      // console.log(interviewerMap)
+    } catch (err) {
+      console.error("Error fetching interviewers:", err)
+    } finally {
+      setIsLoading(false)
+    }
+  };
+  useEffect(() => {
     console.log("fetchData is invoke")
     fetchData();
   }, [])
+
+  // 通过条件判断的方式
+  if (isLoading) {
+    return <div>Loading...</div>
+  }
+
+  if (!interviewer) {
+    return (
+      <div className="container mx-auto p-4">
+        <div className="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded relative" role="alert">
+          <strong className="font-bold">Notice: </strong>
+          <span className="block sm:inline">Interviewer not found.</span>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="container mx-auto p-4">
@@ -190,7 +262,7 @@ export default function InterviewerDetail() {
               </form>
               <DialogFooter className="flex sm:justify-center space-x-3">
                 <Button variant="outline" onClick={() => setIsBookingOpen(false)}>Cancel</Button>
-                <Button onClick={handlePayment} disabled={isProcessingPayment}>
+                <Button onClick={() => handlePayment(interviewer.id)} disabled={isProcessingPayment}>
                   {isProcessingPayment ? "Processing..." : `Pay $${interviewer.price}`}
                 </Button>
               </DialogFooter>
