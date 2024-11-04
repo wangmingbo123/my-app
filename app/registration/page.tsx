@@ -47,8 +47,8 @@ export default function InterviewerRegistration() {
         "userId": 5
       }
       console.log(body)
-      const url = "https://noxious-spooky-cauldron-v6rgv6j7xq9hwv6r-3000.app.github.dev/api/add"
-      // const url = "https://smart-excel-ai-omega-six.vercel.app/api/add"
+      // const url = "https://noxious-spooky-cauldron-v6rgv6j7xq9hwv6r-3000.app.github.dev/api/add"
+      const url = "https://smart-excel-ai-omega-six.vercel.app/api/add"
 
       const response = await axios.post(url, body)
       console.log(response.data)
