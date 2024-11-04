@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Calendar, Star, ThumbsUp } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
@@ -11,6 +11,7 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/hooks/use-toast"
 import { useParams, useRouter } from "next/navigation"
+import axios from "axios"
 
 // Mock data for the interviewer
 const interviewer = {
@@ -69,6 +70,7 @@ export default function InterviewerDetail() {
   const handlePayment = async () => {
     setIsProcessingPayment(true)
     // 调用支付接口 userid, order id,product id , amount
+    // todo:
 
 
     // Simulate payment process
@@ -83,6 +85,23 @@ export default function InterviewerDetail() {
     // 跳转到支付完成页
     router.push("/paymentConfirmation?name=mmm") // This will take the user back to the interviewer detail page
   }
+  const url = "https://smart-excel-ai-omega-six.vercel.app/api/learn"
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(url, {
+          params: { 'search': "A" }
+        })
+        console.log(response)
+      } catch (err) {
+        console.error("Error fetching interviewers:", err)
+      } finally {
+      }
+    };
+    console.log("fetchData is invoke")
+    fetchData();
+  }, [])
 
   return (
     <div className="container mx-auto p-4">

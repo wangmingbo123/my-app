@@ -57,7 +57,7 @@ export default function InterviewerList() {
       //   params: { 'search': "A" }
       // })
       const response = await axios.get(url, {
-        params: { 'search': "A" }
+        params: { 'search': search }
       })
       setInterviewers(response.data.mockInterviewers)
       console.log(response)
@@ -76,7 +76,7 @@ export default function InterviewerList() {
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value
     setSearchTerm(value)
-    // fetchInterviewers(value)
+    fetchInterviewers(value)
   }
 
   return (

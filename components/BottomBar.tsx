@@ -29,7 +29,7 @@ export default function InterviewerList() {
                         <Users className="h-6 w-6" />
                         <span>Order</span>
                     </Link>
-                    <Link href="/messages" className="flex flex-col items-center text-sm text-gray-600 hover:text-primary">
+                    <Link href="/chat" className="flex flex-col items-center text-sm text-gray-600 hover:text-primary">
                         <MessageSquare className="h-6 w-6" />
                         <span>Messages</span>
                     </Link>
