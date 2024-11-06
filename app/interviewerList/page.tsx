@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useEffect, useCallback } from "react"
-import axios from "axios"
 import Link from "next/link"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
@@ -14,6 +13,8 @@ import { useRouter, usePathname } from 'next/navigation';
 import { useSearchParams } from 'next/navigation';
 
 import { Search, Star, Home, Users, MessageSquare, User } from "lucide-react"
+import listUrl from "@/lib/requestUtil"
+import { axios } from "@/lib/axios"
 
 
 
@@ -27,12 +28,21 @@ interface Interviewer {
   rating: number
 }
 
+
 export default function InterviewerList() {
   const [interviewers, setInterviewers] = useState<Interviewer[]>([])
   const [searchTerm, setSearchTerm] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const url = "https://smart-excel-ai-omega-six.vercel.app/api/learn"
+  // const url = "https://noxious-spooky-cauldron-v6rgv6j7xq9hwv6r-3000.app.github.dev/api/learn"
+  const url = `${process.env.NEXT_PUBLIC_BASE_URL}` + "/api/learn"
+  // const url = `${process.env.base_url}` + "/api/learn"
+  // const url = "https://noxious-spooky-cauldron-v6rgv6j7xq9hwv6r-3000.app.github.dev/api/learn"
+  console.log(url)
+
+
+
+
 
   // const router = useRouter();
   // console.log(router)
@@ -56,7 +66,8 @@ export default function InterviewerList() {
       // const response = await axios.get<Interviewer[]>(url, {
       //   params: { 'search': "A" }
       // })
-      const response = await axios.get(url, {
+      console.log("fetchInterviewers " + url)
+      const response = await axios.get("/api/learn", {
         params: { 'search': search }
       })
       setInterviewers(response.data.mockInterviewers)

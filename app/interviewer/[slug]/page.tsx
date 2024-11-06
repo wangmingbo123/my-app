@@ -11,7 +11,9 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/hooks/use-toast"
 import { useParams, useRouter } from "next/navigation"
-import axios from "axios"
+// import axios from "axios"
+import { getCurrentUser } from "@/lib/session"
+import { axios } from "@/lib/axios"
 
 // Mock data for the interviewer
 const interviewerNeedMerge = {
@@ -97,16 +99,20 @@ export default function InterviewerDetail() {
     // 调用支付接口 userid, order id,product id , amount
     // todo:
     // 1. 通过接口获取订单信息
-    const payUrl = "https://smart-excel-ai-omega-six.vercel.app/api/orderAdd";
+    // const payUrl = "https://smart-excel-ai-omega-six.vercel.app/api/orderAdd";
+
+    // const payUrl = "https://noxious-spooky-cauldron-v6rgv6j7xq9hwv6r-3000.app.github.dev/api/orderAdd";
+    const payUrl = "api/orderAdd";
     const pay = async () => {
       try {
+        const { userId } = await getCurrentUser()
         const param = {
-          userId: 1,
+          userId: userId,
           interviewerId: id,
           interviewerName: interviewer.name,
           interviewerAvatar: interviewer.avatar,
           expertise: interviewer.expertise,
-          price: price,
+          price: parseInt(price),
           status: "Upcoming"
         }
         const response = await axios.post(payUrl, {
@@ -147,7 +153,9 @@ export default function InterviewerDetail() {
     // 跳转到支付完成页
     router.push("/paymentConfirmation?orderId=" + orderId) // This will take the user back to the interviewer detail page
   }
-  const url = "https://smart-excel-ai-omega-six.vercel.app/api/interviewerDetail/" + params["slug"];
+  // const url = "https://smart-excel-ai-omega-six.vercel.app/api/interviewerDetail/" + params["slug"];
+  // const url = "https://noxious-spooky-cauldron-v6rgv6j7xq9hwv6r-3000.app.github.dev/api/interviewerDetail/" + params["slug"];
+  const url = "api/interviewerDetail/" + params["slug"];
   const fetchData = async () => {
     try {
       setIsLoading(true)
