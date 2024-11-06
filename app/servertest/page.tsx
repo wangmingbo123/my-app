@@ -6,6 +6,8 @@ import * as React from "react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { SessionProvider } from "next-auth/react";
+import AuthForm from "@/components/AuthForm";
+import { Toaster } from "react-hot-toast";
 
 
 
@@ -49,12 +51,22 @@ const PageWithSessionProvider = ({ children }) => {
   );
 };
 
+function App1() {
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-indigo-100 via-purple-50 to-pink-100 flex items-center justify-center p-4">
+      <AuthForm />
+      <Toaster position="top-right" />
+    </div>
+  );
+}
+
+
 
 
 export default function App() {
   return (
     <PageWithSessionProvider>
-      <UserAuthForm />
+      <App1></App1>
     </PageWithSessionProvider>
   );
 }
