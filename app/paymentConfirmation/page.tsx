@@ -50,10 +50,12 @@ export default function PaymentConfirmation() {
     // console.log(params)
     // console.log(params["slug"])
 
-    const searchParams = useSearchParams();
-    console.log(searchParams)
-    const orderId = searchParams.get('orderId');
-    console.log(orderId)
+    // todo
+    // const searchParams = useSearchParams();
+    // console.log(searchParams)
+    // const orderId = searchParams.get('orderId');
+    // console.log(orderId)
+    const orderId = 14872046
 
     // const handleComplete = () =>        {
     //     Router.push("/interviewerList?name=1")
