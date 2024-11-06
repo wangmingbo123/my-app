@@ -35,7 +35,7 @@ export interface PayUrlResponse {
   data: CreateCheckoutResponse
 };
 
-export const SUBSCRIPTION_VARIANT_KEY = 'subscription'
+const SUBSCRIPTION_VARIANT_KEY = 'subscription'
 
 
 export default function JobSeekerProfile() {
