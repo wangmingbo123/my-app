@@ -1,11 +1,14 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Coins, Calendar, CheckCircle } from 'lucide-react'
+import { axios } from '@/lib/axios'
+import { useToast } from '@/hooks/use-toast'
+import { getCurrentUser, getCurrentUserTong } from '@/lib/session'
 
 interface SubscriptionPlan {
   name: string
@@ -14,10 +17,31 @@ interface SubscriptionPlan {
   features: string[]
 }
 
+export interface UserInfo {
+  userId: string;
+  username: string;
+  avatar?: string;
+  platform: string;
+  email: string;
+  membershipExpire?: number;
+  accessToken?: string;
+  coin?: string;
+}
+export interface CreateCheckoutResponse {
+  checkoutURL: string;
+};
+
+export interface PayUrlResponse {
+  data: CreateCheckoutResponse
+};
+
+export const SUBSCRIPTION_VARIANT_KEY = 'subscription'
+
+
 export default function JobSeekerProfile() {
   const [currentPlan, setCurrentPlan] = useState<string | null>(null)
 
-  const user = {
+  let userInfo = {
     name: "Alex Johnson",
     avatar: "/placeholder.svg?height=100&width=100",
     points: 1250,
@@ -44,12 +68,99 @@ export default function JobSeekerProfile() {
       features: ["Unlimited interview requests", "Top profile visibility", "24/7 phone support", "Personalized career coaching"]
     }
   ]
+  const { userId } = getCurrentUserTong()
 
-  const handleSubscribe = (planName: string) => {
-    setCurrentPlan(planName)
+
+  const handleSubscribe = async (planName: string) => {
+    // setCurrentPlan(planName)
     // Here you would typically handle the subscription process
     console.log(`Subscribed to ${planName} plan`)
+    console.log(userId)
+    await subscribe();
   }
+  // 集成支付
+  // todo:
+  // https://juejin.cn/post/7218916901593415736
+  // https://app.lemonsqueezy.com/settings/webhooks
+  const user1: UserInfo = {
+    userId: userId.toString(),
+
+  } as UserInfo;
+  const subscribe = async () => {
+    if (!user1 || !user1.userId) {
+      // toast.error("Please login first");
+      return;
+    }
+    try {
+      // const url = "https://noxious-spooky-cauldron-v6rgv6j7xq9hwv6r-3000.app.github.dev"
+
+      // const url = "https://noxious-spooky-cauldron-v6rgv6j7xq9hwv6r-3000.app.github.dev"
+
+      const { data: { checkoutURL } } = await axios.post<any, PayUrlResponse>(
+
+        // const data = await axios.post<any, CreateCheckoutResponse>(
+        "/api/payment/subscribe",
+        {
+          userId: user1.userId,
+          type: SUBSCRIPTION_VARIANT_KEY,
+        },
+        {
+          headers: {
+            token: user1.accessToken
+          }
+        }
+      );
+      console.log(checkoutURL)
+      // window.location.href = checkoutURL;
+      // window.open(checkoutURL, "_blank", "noopener, noreferrer");
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const [isLoading, setIsLoading] = useState(false)
+  const [user, setUser] = useState(userInfo)
+
+
+  const { toast } = useToast()
+
+  // 调用远程接口获取个人数据
+  // const url = "https://noxious-spooky-cauldron-v6rgv6j7xq9hwv6r-3000.app.github.dev/api/user";
+  const url = "/api/user";
+  const fetchData = async () => {
+    try {
+      setIsLoading(true)
+      const response = await axios.get(url, {
+        params: { 'search': "A" },
+        headers: {
+        },
+        // withCredentials:true
+      })
+      // console.log(response.user?.coin)
+      console.log(response)
+      console.log(response.data.user)
+      // console.log(response.user.coin)
+      setUser({ ...user, points: response.data.user?.coin })
+      console.log(user)
+      // console.log(response.user)
+
+    } catch (err) {
+      console.error("Error fetching interviewers:", err)
+    } finally {
+      setIsLoading(false)
+    }
+  };
+  useEffect(() => {
+    console.log("fetchData is invoke")
+    fetchData();
+  }, [])
+
+  // 通过条件判断的方式
+  if (isLoading) {
+    return <div>Loading...</div>
+  }
+
+
 
   return (
     <div className="container mx-auto p-4">
@@ -96,8 +207,8 @@ export default function JobSeekerProfile() {
               </ul>
             </CardContent>
             <CardFooter>
-              <Button 
-                className="w-full" 
+              <Button
+                className="w-full"
                 onClick={() => handleSubscribe(plan.name)}
                 variant={currentPlan === plan.name ? "secondary" : "default"}
               >

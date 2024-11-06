@@ -11,7 +11,9 @@ import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
 import InterviewerList from "@/components/BottomBar"
-import axios from "axios"
+// import axios from "axios"
+import { getCurrentUser } from "@/lib/session"
+import { axios } from "@/lib/axios"
 
 // Mock data for user's orders
 const orders1 = [
@@ -76,8 +78,11 @@ export default function UserOrderList() {
       setError(null)
       try {
         //todo:拿到userid
+        const { userId } = await getCurrentUser()
 
-        const url = "https://smart-excel-ai-omega-six.vercel.app/api/orderList?userId=" + 1
+        // const url = "https://smart-excel-ai-omega-six.vercel.app/api/orderList?userId=" + userId
+        // const url = "https://noxious-spooky-cauldron-v6rgv6j7xq9hwv6r-3000.app.github.dev/api/orderList?userId=" + userId
+        const url = "api/orderList?userId=" + userId
         const response = await axios.get(url)
         console.log(response.data.orders)
         setOrders(response.data.orders)

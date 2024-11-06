@@ -9,8 +9,9 @@ import { useParams, useRouter, useSearchParams } from "next/navigation"
 
 import Router from 'next/router'
 import { useEffect, useState } from "react"
-import axios from "axios"
+// import axios from "axios"
 import { Skeleton } from "@/components/ui/skeleton"
+import { axios } from "@/lib/axios"
 
 // Mock data for the completed payment
 // const paymentDetails = {
@@ -72,7 +73,9 @@ export default function PaymentConfirmation() {
         const fetchPaymentData = async () => {
             try {
 
-                const url = "https://smart-excel-ai-omega-six.vercel.app/api/orderDetail/" + orderId;
+                // const url = "https://smart-excel-ai-omega-six.vercel.app/api/orderDetail/" + orderId;
+                // const url = "https://noxious-spooky-cauldron-v6rgv6j7xq9hwv6r-3000.app.github.dev/api/orderDetail/" + orderId;
+                const url = "api/orderDetail/" + orderId;
                 // Replace with your actual API endpoint
                 const response = await axios.get(url)
                 console.log(response)
