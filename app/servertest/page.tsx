@@ -1,20 +1,60 @@
+"use client";
 
-// 服务端渲染test
-import { AlertDialogDemo } from "@/components/interviewer-registration"
-import { getCurrentUser } from "@/lib/session"
+import { signIn, useSession } from "next-auth/react";
+import * as React from "react";
 
-export default async function Page() {
+import { Button, buttonVariants } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
+import { SessionProvider } from "next-auth/react";
 
-    const { userId } = await getCurrentUser()
-    const listUrl = `${process.env.base_url}`+"/api/learn"
 
-    return (
 
-        <><div>mm {userId}</div>
-        {listUrl}
-            <br />
-            <AlertDialogDemo />
-        </>
-    )
+export function UserAuthForm() {
+  const [isGitHubLoading, setIsGitHubLoading] = React.useState<boolean>(false);
+  const router = useRouter();
+  const { data: session, status } = useSession()
+  console.log(session)
+
+  const login = async (platform: string) => {
+    if (platform === "github") {
+      setIsGitHubLoading(true);
+    }
+    signIn(platform, {
+      callbackUrl: `${window.location.origin}`,
+    });
+  };
+
+  return (
+
+
+    <Button
+      variant="outline"
+      className="border-gray-400"
+      onClick={() => login("github")}
+      disabled={isGitHubLoading}
+    >
+      Github
+      {session?.user}
+    </Button>
+
+  );
 }
 
+
+const PageWithSessionProvider = ({ children }) => {
+  return (
+    <SessionProvider>
+      {children}
+    </SessionProvider>
+  );
+};
+
+
+
+export default function App() {
+  return (
+    <PageWithSessionProvider>
+      <UserAuthForm />
+    </PageWithSessionProvider>
+  );
+}
