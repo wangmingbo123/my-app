@@ -33,7 +33,7 @@ export default function InterviewerList() {
                         <MessageSquare className="h-6 w-6" />
                         <span>Messages</span>
                     </Link>
-                    <Link href="/jobSeekerProfile" className="flex flex-col items-center text-sm text-gray-600 hover:text-primary">
+                    <Link href="/userProfile" className="flex flex-col items-center text-sm text-gray-600 hover:text-primary">
                         <User className="h-6 w-6" />
                         <span>Profile</span>
                     </Link>

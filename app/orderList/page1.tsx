@@ -16,8 +16,6 @@ import { getCurrentUser } from "@/lib/session"
 import { axios } from "@/lib/axios"
 import { toast } from "@/hooks/use-toast"
 
-import Link from "next/link"
-
 // Mock data for user's orders
 const orders1 = [
   {
@@ -113,8 +111,6 @@ export default function UserOrderList() {
 
   // 提交评价接口
   const submitReview = async (orderId: string) => {
-    // 提前缓存好selectedOrder
-    console.log("orderId " + orderId)
     if (rating === 0) {
       toast({
         title: "Error",
@@ -148,6 +144,9 @@ export default function UserOrderList() {
     } finally {
       setIsReviewOpen(false)
     }
+
+    // 
+
 
   }
 
@@ -220,50 +219,48 @@ export default function UserOrderList() {
       <h1 className="text-3xl font-bold mb-6">My Orders</h1>
       <div className="space-y-6">
         {orders.map((order) => (
-          <Link href={`/orderDetail/${order.id}`} key={order.id} className="block">
-            <Card key={order.id}>
-              <CardHeader className="flex flex-row items-center gap-4">
-                <Avatar>
-                  <AvatarImage src={order.interviewerAvatar} alt={order.interviewerName} />
-                  <AvatarFallback>{order.interviewerName.split(' ').map(n => n[0]).join('')}</AvatarFallback>
-                </Avatar>
+          <Card key={order.id}>
+            <CardHeader className="flex flex-row items-center gap-4">
+              <Avatar>
+                <AvatarImage src={order.interviewerAvatar} alt={order.interviewerName} />
+                <AvatarFallback>{order.interviewerName.split(' ').map(n => n[0]).join('')}</AvatarFallback>
+              </Avatar>
+              <div>
+                <CardTitle>{order.interviewerName}</CardTitle>
+                <CardDescription>{order.expertise}</CardDescription>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="flex items-center">
+                  <Calendar className="mr-2 h-4 w-4" />
+                  <span>{order.date}</span>
+                </div>
+                <div className="flex items-center">
+                  <Clock className="mr-2 h-4 w-4" />
+                  <span>{order.time} ({order.duration} min)</span>
+                </div>
+                <div className="flex items-center">
+                  <DollarSign className="mr-2 h-4 w-4" />
+                  <span>${order.price}</span>
+                </div>
                 <div>
-                  <CardTitle>{order.interviewerName}</CardTitle>
-                  <CardDescription>{order.expertise}</CardDescription>
+                  <span className={`px-2 py-1 rounded-full text-sm ${order.status === 'Completed' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800'
+                    }`}>
+                    {order.status}
+                  </span>
                 </div>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="flex items-center">
-                    <Calendar className="mr-2 h-4 w-4" />
-                    <span>{order.date}</span>
-                  </div>
-                  <div className="flex items-center">
-                    <Clock className="mr-2 h-4 w-4" />
-                    <span>{order.time} ({order.duration} min)</span>
-                  </div>
-                  <div className="flex items-center">
-                    <DollarSign className="mr-2 h-4 w-4" />
-                    <span>${order.price}</span>
-                  </div>
-                  <div>
-                    <span className={`px-2 py-1 rounded-full text-sm ${order.status === 'Completed' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800'
-                      }`}>
-                      {order.status}
-                    </span>
-                  </div>
-                </div>
-              </CardContent>
-              <CardFooter>
-                {order.status === 'Upcoming' && (
-                  <Button variant="outline" onClick={() => handleReschedule(order)}>Reschedule</Button>
-                )}
-                {order.status === 'Completed' && !order.reviewed && (
-                  <Button variant="outline" onClick={() => handleReview(order)}>Leave Review</Button>
-                )}
-              </CardFooter>
-            </Card>
-          </Link>
+              </div>
+            </CardContent>
+            <CardFooter>
+              {order.status === 'Upcoming' && (
+                <Button variant="outline" onClick={() => handleReschedule(order)}>Reschedule</Button>
+              )}
+              {order.status === 'Completed' && !order.reviewed && (
+                <Button variant="outline" onClick={() => handleReview(order)}>Leave Review</Button>
+              )}
+            </CardFooter>
+          </Card>
         ))}
       </div>
 
@@ -332,7 +329,7 @@ export default function UserOrderList() {
             />
           </div>
           <DialogFooter>
-            <Button onClick={() => submitReview(selectedOrder.id)} disabled={rating === 0}>Submit Review</Button>
+            <Button onClick={submitReview} disabled={rating === 0}>Submit Review</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

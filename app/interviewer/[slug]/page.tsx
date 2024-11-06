@@ -33,7 +33,7 @@ const interviewerNeedMerge = {
 }
 
 // Mock data for orders and reviews
-const ordersAndReviews = [
+const ordersAndReviewsInfo = [
   {
     id: 1,
     clientName: "John Doe",
@@ -76,12 +76,24 @@ interface Interviewer {
   reviewCount: number;
 }
 
+const LoadingCircles = () => (
+  <div className="flex justify-center items-center space-x-2 h-24">
+    {[...Array(3)].map((_, i) => (
+      <div key={i} className="w-3 h-3 bg-blue-500 rounded-full animate-bounce" style={{
+        animationDelay: `${i * 0.15}s`
+      }}></div>
+    ))}
+  </div>
+)
+
 export default function InterviewerDetail() {
   const [isBookingOpen, setIsBookingOpen] = useState(false)
   const [isProcessingPayment, setIsProcessingPayment] = useState(false)
   const [interviewer, setInterviewer] = useState(null)
 
   const [isLoading, setIsLoading] = useState(false)
+
+  const [ordersAndReviews, setOrdersAndReviews] = useState(ordersAndReviewsInfo)
 
 
   const { toast } = useToast()
@@ -177,14 +189,45 @@ export default function InterviewerDetail() {
       setIsLoading(false)
     }
   };
+  // todo:取下单和评论数据
+  const fetchOrders = async () => {
+    setIsLoading(true)
+    try {
+
+      // 类似商家id
+      let interviewerId = params["slug"];
+      const url = "api/orderInterviewerList?interviewerId=" + interviewerId
+      const response = await axios.get(url)
+      console.log(response.data.orders)
+      setOrdersAndReviews(response.data.orders)
+    } catch (err) {
+      console.error('Error fetching orders:', err)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
   useEffect(() => {
     console.log("fetchData is invoke")
-    fetchData();
+    fetchData()
+    fetchOrders()
   }, [])
 
   // 通过条件判断的方式
+  // 加载动画效果
   if (isLoading) {
-    return <div>Loading...</div>
+    return (
+      <div className="container mx-auto p-4 max-w-3xl">
+        <Card className="mb-8">
+          <CardHeader>
+            <CardTitle>Loading Interview Details</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <LoadingCircles />
+          </CardContent>
+        </Card>
+      </div>
+    )
   }
 
   if (!interviewer) {
