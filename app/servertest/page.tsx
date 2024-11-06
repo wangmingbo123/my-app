@@ -34,7 +34,7 @@ export function UserAuthForm() {
       disabled={isGitHubLoading}
     >
       Github
-      {session?.user}
+      {session?.user.name}
     </Button>
 
   );
