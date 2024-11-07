@@ -38,7 +38,7 @@ export default async function Home() {
                             <li><Link href="#faq" className="hover:underline">FAQ</Link></li>
                         </ul>
                     </nav>
-                    <LogoutSidebar />
+                    {user3?(<LogoutSidebar />):null}
                 </div>
             </header>
 
