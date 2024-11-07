@@ -55,7 +55,7 @@ const PageWithSessionProvider = ({ children }) => {
   );
 };
 
-function App1(y) {
+function App1() {
   // if (session && session.user) {
   //   return <div>you are has login {session.user.name}</div>
   // }
