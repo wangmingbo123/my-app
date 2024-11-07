@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 import { SessionProvider } from "next-auth/react";
 import AuthForm from "@/components/AuthForm";
 import { Toaster } from "react-hot-toast";
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 import {Session} from "next-auth";
 
 
@@ -55,20 +55,28 @@ const PageWithSessionProvider = ({ children }) => {
   );
 };
 
-function App1(session: any) {
+function App1(y) {
   // if (session && session.user) {
   //   return <div>you are has login {session.user.name}</div>
   // }
+  const { data: session, status } = useSession()
+   const  [login,setLogin] = useState(false)
+  console.log("useSession is invoke")
+  console.log(session)
+  console.log("useSession is invoke")
+  if (session&&session.user){
+    setLogin(true)
+  }
 
   const router = useRouter();
 
   useEffect(() => {
     console.log("fetchData is invoke")
-    console.log(session)
-    if (session && session.user) {
+    console.log(login)
+    if (login) {
       router.push("/interviewerList")
     }
-  }, [])
+  }, [login])
 
 
   return (
@@ -84,13 +92,9 @@ function App1(session: any) {
 
 
 export default function App() {
-  const { data: session, status } = useSession()
-  console.log("useSession is invoke")
-  console.log(session)
-  console.log("useSession is invoke")
   return (
     <PageWithSessionProvider>
-      <App1 session={session}></App1>
+      <App1></App1>
     </PageWithSessionProvider>
   );
 }
