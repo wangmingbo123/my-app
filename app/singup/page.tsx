@@ -58,6 +58,9 @@ function App1() {
   const { data: session, status } = useSession()
 
   const  router = useRouter()
+  console.log("useSession is invoke")
+  console.log(session)
+  console.log("useSession is invoke")
   // if (session && session.user) {
   //   return <div>you are has login {session.user.name}</div>
   // }

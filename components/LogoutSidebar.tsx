@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/sheet"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { LogOut, Settings, User } from 'lucide-react'
+import {signOut} from "next-auth/react";
 
 export default function LogoutSidebar() {
   const [open, setOpen] = useState(false)
@@ -19,6 +20,9 @@ export default function LogoutSidebar() {
   const handleLogout = () => {
     // 在这里处理退出登录逻辑
     console.log('用户退出登录')
+    signOut({
+      callbackUrl: `${window.location.origin}/singup`,
+    });
     setOpen(false)
   }
 
