@@ -1,4 +1,6 @@
-'use client'
+// 'use client'
+
+// 服务端和客户端渲染
 
 import { useEffect, useState } from 'react'
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -8,7 +10,7 @@ import { Badge } from "@/components/ui/badge"
 import { Coins, Calendar, CheckCircle } from 'lucide-react'
 import { axios } from '@/lib/axios'
 import { useToast } from '@/hooks/use-toast'
-import { getCurrentUser, getCurrentUserTong } from '@/lib/session'
+import { getCurrentUser, getCurrentUserServer, getCurrentUserTong } from '@/lib/session'
 
 interface SubscriptionPlan {
   name: string
@@ -38,8 +40,23 @@ export interface PayUrlResponse {
 const SUBSCRIPTION_VARIANT_KEY = 'subscription'
 
 
-export default function JobSeekerProfile() {
+
+export default async function JobSeekerProfileServer() {
+  const user3 = (await getCurrentUserServer()) as UserInfo;
+  return (<JobSeekerProfile user3={user3}></JobSeekerProfile>)
+
+}
+interface JobSeekerProfileProps {
+  user3?: UserInfo
+}
+
+
+
+export function JobSeekerProfile({ user3 }: JobSeekerProfileProps) {
   const [currentPlan, setCurrentPlan] = useState<string | null>(null)
+
+  console.log("user1 form server")
+  console.log(user3)
 
   let userInfo = {
     name: "Alex Johnson",
@@ -157,11 +174,11 @@ export default function JobSeekerProfile() {
 
   if (isLoading) {
     return (
-        <div className="flex justify-center items-center h-screen">
-            <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-gray-900"></div>
-        </div>
+      <div className="flex justify-center items-center h-screen">
+        <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-gray-900"></div>
+      </div>
     )
-}
+  }
 
 
 
