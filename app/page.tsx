@@ -11,6 +11,7 @@ import {
 import {getCurrentUserServer} from "@/lib/session";
 import {UserInfo} from "@/app/userProfile/page";
 import {useRouter} from "next/navigation";
+import LogoutSidebar from "@/components/LogoutSidebar";
 
 // 安装命令
 // npx shadcn@latest add accordion
@@ -43,6 +44,7 @@ export default async function Home() {
                             <li><Link href="#faq" className="hover:underline">FAQ</Link></li>
                         </ul>
                     </nav>
+                    <LogoutSidebar />
                 </div>
             </header>
 

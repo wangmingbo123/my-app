@@ -23,7 +23,6 @@ export default function InterviewerRegistration() {
     expertise: "",
     experience: "",
     hourlyRate: "",
-    bio: "",
     selfIntroduction: "",
   })
 
@@ -62,7 +61,6 @@ export default function InterviewerRegistration() {
         expertise: "",
         experience: "",
         hourlyRate: "",
-        bio: "",
         selfIntroduction: "",
       })
       // 返回首页
@@ -145,16 +143,6 @@ export default function InterviewerRegistration() {
               min="0"
               step="0.01"
               value={formData.hourlyRate}
-              onChange={handleInputChange}
-              required
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="bio">Short Bio</Label>
-            <Textarea
-              id="bio"
-              name="bio"
-              value={formData.bio}
               onChange={handleInputChange}
               required
             />
