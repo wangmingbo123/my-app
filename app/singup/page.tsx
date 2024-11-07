@@ -23,7 +23,8 @@ export function UserAuthForm() {
     }
     //todo:
     signIn(platform, {
-      callbackUrl: `${window.location.origin}/interviewerList`,
+      // callbackUrl: `${window.location.origin}/interviewerList`,
+      callbackUrl: `${window.location.origin}`,
     });
   };
 
@@ -53,6 +54,13 @@ const PageWithSessionProvider = ({ children }) => {
 };
 
 function App1() {
+  const { data: session, status } = useSession()
+  console.log(session)
+  if (session && session.user) {
+    return <div>you are has login {session.user.name}</div>
+  }
+
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-100 via-purple-50 to-pink-100 flex items-center justify-center p-4">
       <AuthForm />
