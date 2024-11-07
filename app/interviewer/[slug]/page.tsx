@@ -107,6 +107,7 @@ export function InterviewerDetail() {
   const router = useRouter()
 
 
+  // 客户端拿到登录user
   const { data: session, status } = useSession()
 
   // 会存在多次跳变

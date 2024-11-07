@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Github, Loader2 } from 'lucide-react';
 import toast from 'react-hot-toast';
+import {signIn} from "next-auth/react";
 
 type AuthMode = 'login' | 'register';
 
@@ -18,6 +19,9 @@ export default function AuthForm() {
 
   const handleGithubLogin = async () => {
     setLoading(true);
+    signIn("github", {
+      callbackUrl: `${window.location.origin}`,
+    });
     toast.success('GitHub login initiated!');
     setLoading(false);
   };
@@ -130,6 +134,7 @@ export default function AuthForm() {
             </div>
           </div>
 
+          {/*github 登录*/}
           <button
             type="button"
             onClick={handleGithubLogin}
