@@ -20,12 +20,12 @@ export default async function Home() {
     console.log(user3)
     if (user3){
         //服务端路由定向
-        return {
-            redirect: {
-                destination: '/interviewerList',
-                permanent: false
-            }
-        };
+        // return {
+        //     redirect: {
+        //         destination: '/interviewerList',
+        //         permanent: false
+        //     }
+        // };
     }
 
 

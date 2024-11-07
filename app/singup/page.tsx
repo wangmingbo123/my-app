@@ -21,8 +21,9 @@ export function UserAuthForm() {
     if (platform === "github") {
       setIsGitHubLoading(true);
     }
+    //todo:
     signIn(platform, {
-      callbackUrl: `${window.location.origin}`,
+      callbackUrl: `${window.location.origin}/interviewerList`,
     });
   };
 
