@@ -19,15 +19,9 @@ export default async function Home() {
     const user3 = (await getCurrentUserServer()) as UserInfo;
     console.log("home page")
     console.log(user3)
-    if (user3){
-        //服务端路由定向
-        // return {
-        //     redirect: {
-        //         destination: '/interviewerList',
-        //         permanent: false
-        //     }
-        // };
-    }
+
+    const  jumpPath = user3?"/interviewerList":"/singup"
+
 
 
 
@@ -55,7 +49,7 @@ export default async function Home() {
                         <h2 className="text-4xl md:text-5xl font-bold mb-4">提升您的面试技巧，赢得理想工作</h2>
                         <p className="text-xl mb-8">与行业专家一对一交流，获得个性化的面试指导</p>
                         <Button size="lg" asChild>
-                            <Link href="/singup">立即开始</Link>
+                            <Link href={jumpPath}>立即开始</Link>
                         </Button>
                     </div>
                 </section>

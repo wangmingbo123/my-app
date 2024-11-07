@@ -73,9 +73,9 @@ function App1() {
   useEffect(() => {
     console.log("fetchData is invoke")
     console.log(login)
-    if (login) {
-      router.push("/interviewerList")
-    }
+    // if (login) {
+    //   router.push("/interviewerList")
+    // }
   }, [login])
 
 
