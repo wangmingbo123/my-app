@@ -9,12 +9,13 @@ import { SessionProvider } from "next-auth/react";
 import AuthForm from "@/components/AuthForm";
 import { Toaster } from "react-hot-toast";
 import {useEffect} from "react";
+import {Session} from "next-auth";
 
 
 
 export function UserAuthForm() {
   const [isGitHubLoading, setIsGitHubLoading] = React.useState<boolean>(false);
-  const router = useRouter();
+
   const { data: session, status } = useSession()
   console.log(session)
 
@@ -54,16 +55,12 @@ const PageWithSessionProvider = ({ children }) => {
   );
 };
 
-function App1() {
-  const { data: session, status } = useSession()
-
-  const  router = useRouter()
-  console.log("useSession is invoke")
-  console.log(session)
-  console.log("useSession is invoke")
+function App1(session: any) {
   // if (session && session.user) {
   //   return <div>you are has login {session.user.name}</div>
   // }
+
+  const router = useRouter();
 
   useEffect(() => {
     console.log("fetchData is invoke")
@@ -87,9 +84,13 @@ function App1() {
 
 
 export default function App() {
+  const { data: session, status } = useSession()
+  console.log("useSession is invoke")
+  console.log(session)
+  console.log("useSession is invoke")
   return (
     <PageWithSessionProvider>
-      <App1></App1>
+      <App1 session={session}></App1>
     </PageWithSessionProvider>
   );
 }
