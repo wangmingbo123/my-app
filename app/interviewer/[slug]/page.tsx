@@ -14,6 +14,8 @@ import { useParams, useRouter } from "next/navigation"
 // import axios from "axios"
 import { getCurrentUser } from "@/lib/session"
 import { axios } from "@/lib/axios"
+import { SessionProvider } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 
 // Mock data for the interviewer
 const interviewerNeedMerge = {
@@ -86,7 +88,8 @@ const LoadingCircles = () => (
   </div>
 )
 
-export default function InterviewerDetail() {
+// export default function InterviewerDetail() {
+export function InterviewerDetail() {
   const [isBookingOpen, setIsBookingOpen] = useState(false)
   const [isProcessingPayment, setIsProcessingPayment] = useState(false)
   const [interviewer, setInterviewer] = useState(null)
@@ -103,6 +106,12 @@ export default function InterviewerDetail() {
   console.log(params["slug"])
   const router = useRouter()
 
+
+  const { data: session, status } = useSession()
+
+  console.log("MMMMM")
+  console.log(session)
+  console.log("MMMMM")
 
 
   const handlePayment = async (id, price) => {
@@ -374,4 +383,13 @@ export default function InterviewerDetail() {
       </Card>
     </div>
   )
+}
+
+
+export default function App() {
+  return (
+    <SessionProvider>
+      <InterviewerDetail></InterviewerDetail>
+    </SessionProvider>
+  );
 }
