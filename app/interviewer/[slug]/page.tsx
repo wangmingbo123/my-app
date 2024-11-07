@@ -109,9 +109,13 @@ export function InterviewerDetail() {
 
   const { data: session, status } = useSession()
 
+  // 会存在多次跳变
   console.log("MMMMM")
   console.log(session)
   console.log("MMMMM")
+  // if(!session!.user){
+  //   alert("用户已登录"+session.user.name)
+  // }
 
 
   const handlePayment = async (id, price) => {
@@ -386,7 +390,7 @@ export function InterviewerDetail() {
 }
 
 
-export default function App() {
+export default  function App() {
   return (
     <SessionProvider>
       <InterviewerDetail></InterviewerDetail>
