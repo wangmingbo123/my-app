@@ -8,7 +8,7 @@ import { useParams, useRouter, useSearchParams } from "next/navigation"
 // import { useRouter } from "next/router"
 
 import Router from 'next/router'
-import { useEffect, useState } from "react"
+import {Suspense, useEffect, useState} from "react"
 // import axios from "axios"
 import { Skeleton } from "@/components/ui/skeleton"
 import { axios } from "@/lib/axios"
@@ -40,7 +40,7 @@ import { axios } from "@/lib/axios"
 
 
 
-export default function PaymentConfirmation() {
+ function PaymentConfirmation() {
 
     const router = useRouter()
     const handleComplete = () => {
@@ -209,3 +209,14 @@ export default function PaymentConfirmation() {
         </div>
     )
 }
+
+const PaymentConfirmationPage = () => {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            {/* 这里放置可能会导致异步加载的部分，例如使用 useSearchParams 的逻辑 */}
+            <PaymentConfirmation></PaymentConfirmation>
+        </Suspense>
+    );
+};
+
+export default PaymentConfirmationPage;
