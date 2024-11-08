@@ -16,6 +16,7 @@ import { getCurrentUser } from "@/lib/session"
 import { axios } from "@/lib/axios"
 import { SessionProvider } from "next-auth/react";
 import { signIn, useSession } from "next-auth/react";
+import ImageCarousel from "@/components/ImageCarousel";
 
 // Mock data for the interviewer
 const interviewerNeedMerge = {
@@ -29,9 +30,12 @@ const interviewerNeedMerge = {
   selfIntroduction: "Hello! I'm Alice Johnson, a frontend developer with 5 years of experience in creating beautiful and functional web applications. I specialize in React, Vue, and Angular frameworks, and I have a keen eye for design and user experience. My goal is to help you succeed in your frontend developer interviews by sharing my knowledge and experience in the field. I can provide mock interviews, code reviews, and personalized feedback to help you improve your skills and confidence. Let's work together to take your frontend development career to the next level!",
   skills: ["React", "Vue", "Angular", "CSS", "JavaScript", "TypeScript", "Responsive Design"],
   languages: ["English (Native)", "Spanish (Intermediate)"],
-  availability: "Weekdays 9 AM - 5 PM EST",
+  availability: ["Weekdays 9 AM - 5 PM EST","Weekdays 9 AM - 5 PM EST"],
   rating: 4.8,
   reviewCount: 47,
+  images:["Weekdays","Weekdays1"],//todo
+  email:"1445260526@qq.com",
+  phone:"13764211789"
 }
 
 // Mock data for orders and reviews
@@ -195,6 +199,7 @@ export function InterviewerDetail() {
       }
       // interviewerMap["name"] = response.data.interviewer["name"]
       // console.log(interviewerMap)
+      // response.data.interviewer["images"]=["https://ssl.gstatic.com/gb/images/sprites/p_2x_eb7895ba582f.png","https://ssl.gstatic.com/gb/images/sprites/p_2x_eb7895ba582f.png"]
       setInterviewer(response.data.interviewer)
       // console.log(interviewerMap)
     } catch (err) {
@@ -260,9 +265,14 @@ export function InterviewerDetail() {
       <Card className="mb-8">
         <CardHeader className="flex flex-col md:flex-row items-center gap-6">
           <Avatar className="w-32 h-32">
-            <AvatarImage src={interviewer.avatar} alt={interviewer.name} />
+            <AvatarImage src={interviewer.avatar} alt={interviewer.name}/>
             <AvatarFallback>{interviewer.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
           </Avatar>
+          {/*<div className="flex flex-col items-center space-y-4 w-full md:w-1/2">*/}
+          {/*  <ImageCarousel images={interviewer.images}/>*/}
+          {/*  <div className="text-2xl font-semibold">${interviewer.hourlyRate}/hour</div>*/}
+          {/*</div>*/}
+
           <div className="text-center md:text-left">
             <CardTitle className="text-3xl mb-2">{interviewer.name}</CardTitle>
             <CardDescription className="text-xl">{interviewer.expertise}</CardDescription>
@@ -277,6 +287,14 @@ export function InterviewerDetail() {
             <p>{interviewer.selfIntroduction}</p>
           </section>
           <section>
+            <h2 className="text-2xl font-semibold mb-2">Email</h2>
+            <p>{interviewer.email}</p>
+          </section>
+          <section>
+            <h2 className="text-2xl font-semibold mb-2">Phone</h2>
+            <p>{interviewer.phone}下单后会展示</p>
+          </section>
+          <section>
             <h2 className="text-2xl font-semibold mb-2">Experience</h2>
             <p>{interviewer.experience} in {interviewer.expertise}</p>
           </section>
@@ -284,7 +302,7 @@ export function InterviewerDetail() {
             <h2 className="text-2xl font-semibold mb-2">Skills</h2>
             <div className="flex flex-wrap gap-2">
               {interviewer.skills?.map((skill, index) => (
-                <span key={index} className="bg-primary text-primary-foreground px-3 py-1 rounded-full text-sm">
+                  <span key={index} className="bg-primary text-primary-foreground px-3 py-1 rounded-full text-sm">
                   {skill}
                 </span>
               ))}
@@ -294,14 +312,23 @@ export function InterviewerDetail() {
             <h2 className="text-2xl font-semibold mb-2">Languages</h2>
             <ul className="list-disc list-inside">
               {interviewer.languages?.map((language, index) => (
-                <li key={index}>{language}</li>
+                  <li key={index}>{language}</li>
               ))}
             </ul>
           </section>
+
           <section>
             <h2 className="text-2xl font-semibold mb-2">Availability</h2>
-            <p>{interviewer.availability}</p>
+            <ul className="list-disc list-inside">
+              {interviewer.availability?.map((availability, index) => (
+                  <li key={index}>{availability}</li>
+              ))}
+            </ul>
           </section>
+          {/*<section>*/}
+          {/*  <h2 className="text-2xl font-semibold mb-2">Availability</h2>*/}
+          {/*  <p>{interviewer.availability}</p>*/}
+          {/*</section>*/}
           <section>
             <h2 className="text-2xl font-semibold mb-2">Pricing</h2>
             <p className="text-2xl font-bold text-primary">${interviewer.price}/hour</p>

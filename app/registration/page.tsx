@@ -9,9 +9,60 @@ import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/hooks/use-toast"
-import { Loader2 } from "lucide-react"
-import { useRouter, usePathname } from 'next/navigation';
+import { Loader2, X } from "lucide-react"
+import { useRouter } from 'next/navigation'
+import { Badge } from "@/components/ui/badge"
 
+// Custom MultiSelect component
+const MultiSelect = ({ options, value, onChange, placeholder }) => {
+  const [isOpen, setIsOpen] = useState(false)
+
+  const handleSelect = (option) => {
+    const newValue = value.includes(option)
+        ? value.filter(item => item !== option)
+        : [...value, option]
+    onChange(newValue)
+  }
+
+  return (
+      <div className="relative">
+        <div
+            className="flex flex-wrap gap-1 p-2 border rounded-md cursor-pointer"
+            onClick={() => setIsOpen(!isOpen)}
+        >
+          {value.length > 0 ? (
+              value.map(item => (
+                  <Badge key={item} variant="secondary" className="mr-1">
+                    {item}
+                    <X
+                        className="ml-1 h-3 w-3 cursor-pointer"
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          handleSelect(item)
+                        }}
+                    />
+                  </Badge>
+              ))
+          ) : (
+              <span className="text-muted-foreground">{placeholder}</span>
+          )}
+        </div>
+        {isOpen && (
+            <div className="absolute z-10 w-full mt-1 bg-background border rounded-md shadow-lg">
+              {options.map(option => (
+                  <div
+                      key={option}
+                      className={`p-2 cursor-pointer hover:bg-accent ${value.includes(option) ? 'bg-accent' : ''}`}
+                      onClick={() => handleSelect(option)}
+                  >
+                    {option}
+                  </div>
+              ))}
+            </div>
+        )}
+      </div>
+  )
+}
 
 export default function InterviewerRegistration() {
   const router = useRouter()
@@ -24,6 +75,9 @@ export default function InterviewerRegistration() {
     experience: "",
     hourlyRate: "",
     selfIntroduction: "",
+    skills: [],
+    languages: [],
+    availability: [],
   })
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -35,18 +89,20 @@ export default function InterviewerRegistration() {
     setFormData(prev => ({ ...prev, expertise: value }))
   }
 
+  const handleMultiSelectChange = (name: string) => (value: string[]) => {
+    setFormData(prev => ({ ...prev, [name]: value }))
+  }
+
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
     setIsSubmitting(true)
     try {
-
       const body = {
         ...formData,
         "price": formData.hourlyRate,
         "userId": 5
       }
       console.log(body)
-      // const url = "https://noxious-spooky-cauldron-v6rgv6j7xq9hwv6r-3000.app.github.dev/api/add"
       const url = "https://smart-excel-ai-omega-six.vercel.app/api/add"
 
       const response = await axios.post(url, body)
@@ -62,10 +118,11 @@ export default function InterviewerRegistration() {
         experience: "",
         hourlyRate: "",
         selfIntroduction: "",
+        skills: [],
+        languages: [],
+        availability: [],
       })
-      // 返回首页
       router.push("/interviewerList")
-
     } catch (error) {
       console.error('Error submitting form:', error)
       toast({
@@ -79,100 +136,127 @@ export default function InterviewerRegistration() {
   }
 
   return (
-    <Card className="w-full max-w-2xl mx-auto">
-      <CardHeader>
-        <CardTitle>Register as an Interviewer</CardTitle>
-        <CardDescription>Fill out the form below to register as an interviewer on our platform.</CardDescription>
-      </CardHeader>
-      <form onSubmit={onSubmit}>
-        <CardContent className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="name">Full Name</Label>
-            <Input
-              id="name"
-              name="name"
-              value={formData.name}
-              onChange={handleInputChange}
-              required
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
-            <Input
-              id="email"
-              name="email"
-              type="email"
-              value={formData.email}
-              onChange={handleInputChange}
-              required
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="expertise">Area of Expertise</Label>
-            <Select onValueChange={handleSelectChange} value={formData.expertise} required>
-              <SelectTrigger id="expertise">
-                <SelectValue placeholder="Select your area of expertise" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="frontend">Frontend Development</SelectItem>
-                <SelectItem value="backend">Backend Development</SelectItem>
-                <SelectItem value="fullstack">Full Stack Development</SelectItem>
-                <SelectItem value="devops">DevOps</SelectItem>
-                <SelectItem value="mobile">Mobile Development</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="experience">Years of Experience</Label>
-            <Input
-              id="experience"
-              name="experience"
-              type="number"
-              min="0"
-              value={formData.experience}
-              onChange={handleInputChange}
-              required
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="hourlyRate">Hourly Rate ($)</Label>
-            <Input
-              id="hourlyRate"
-              name="hourlyRate"
-              type="number"
-              min="0"
-              step="0.01"
-              value={formData.hourlyRate}
-              onChange={handleInputChange}
-              required
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="selfIntroduction">Self-Introduction</Label>
-            <Textarea
-              id="selfIntroduction"
-              name="selfIntroduction"
-              value={formData.selfIntroduction}
-              onChange={handleInputChange}
-              placeholder="Provide a detailed self-introduction. This will be shown to potential clients."
-              className="h-32"
-              required
-            />
-          </div>
-        </CardContent>
-        <CardFooter>
-          <Button type="submit" className="w-full" disabled={isSubmitting}>
-            {isSubmitting ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Submitting...
-              </>
-            ) : (
-              'Register'
-            )}
-          </Button>
-        </CardFooter>
-      </form>
-    </Card>
+      <Card className="w-full max-w-2xl mx-auto">
+        <CardHeader>
+          <CardTitle>Register as an Interviewer</CardTitle>
+          <CardDescription>Fill out the form below to register as an interviewer on our platform.</CardDescription>
+        </CardHeader>
+        <form onSubmit={onSubmit}>
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="name">Full Name</Label>
+              <Input
+                  id="name"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleInputChange}
+                  required
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="email">Email</Label>
+              <Input
+                  id="email"
+                  name="email"
+                  type="email"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  required
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="expertise">Area of Expertise</Label>
+              <Select onValueChange={handleSelectChange} value={formData.expertise} required>
+                <SelectTrigger id="expertise">
+                  <SelectValue placeholder="Select your area of expertise" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="frontend">Frontend Development</SelectItem>
+                  <SelectItem value="backend">Backend Development</SelectItem>
+                  <SelectItem value="fullstack">Full Stack Development</SelectItem>
+                  <SelectItem value="devops">DevOps</SelectItem>
+                  <SelectItem value="mobile">Mobile Development</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="experience">Years of Experience</Label>
+              <Input
+                  id="experience"
+                  name="experience"
+                  type="number"
+                  min="0"
+                  value={formData.experience}
+                  onChange={handleInputChange}
+                  required
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="hourlyRate">Hourly Rate ($)</Label>
+              <Input
+                  id="hourlyRate"
+                  name="hourlyRate"
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  value={formData.hourlyRate}
+                  onChange={handleInputChange}
+                  required
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="skills">Skills</Label>
+              <MultiSelect
+                  options={["JavaScript", "React", "Node.js", "Python", "Java", "C++", "SQL", "NoSQL", "AWS", "Docker"]}
+                  value={formData.skills}
+                  onChange={handleMultiSelectChange("skills")}
+                  placeholder="Select your skills"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="languages">Languages</Label>
+              <MultiSelect
+                  options={["English", "Mandarin", "Spanish", "French", "German", "Japanese", "Korean", "Russian", "Arabic", "Hindi"]}
+                  value={formData.languages}
+                  onChange={handleMultiSelectChange("languages")}
+                  placeholder="Select languages you speak"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="availability">Availability</Label>
+              <MultiSelect
+                  options={["Weekday Mornings", "Weekday Afternoons", "Weekday Evenings", "Weekend Mornings", "Weekend Afternoons", "Weekend Evenings"]}
+                  value={formData.availability}
+                  onChange={handleMultiSelectChange("availability")}
+                  placeholder="Select your availability"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="selfIntroduction">Self-Introduction</Label>
+              <Textarea
+                  id="selfIntroduction"
+                  name="selfIntroduction"
+                  value={formData.selfIntroduction}
+                  onChange={handleInputChange}
+                  placeholder="Provide a detailed self-introduction. This will be shown to potential clients."
+                  className="h-32"
+                  required
+              />
+            </div>
+          </CardContent>
+          <CardFooter>
+            <Button type="submit" className="w-full" disabled={isSubmitting}>
+              {isSubmitting ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Submitting...
+                  </>
+              ) : (
+                  'Register'
+              )}
+            </Button>
+          </CardFooter>
+        </form>
+      </Card>
   )
 }
