@@ -12,8 +12,11 @@ interface ExtendedToken extends TokenSet {
 
 
 
-const clientId = "Ov23liQ0IyW871lhGzJ8";
-const clientSecret = "cc7e4cdfdb5b30552232f920c2a5aed6cc8ea9c2"
+// const clientId = "Ov23liQ0IyW871lhGzJ8";
+// const clientSecret = "cc7e4cdfdb5b30552232f920c2a5aed6cc8ea9c2"
+
+const clientId = `${process.env.GITHUB_ID}`
+const clientSecret = `${process.env.GITHUB_SECRET}`
 
 console.log("clientId " + clientId)
 console.log("clientSecret " + clientSecret)
