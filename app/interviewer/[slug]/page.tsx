@@ -92,8 +92,8 @@ const LoadingCircles = () => (
   </div>
 )
 
-// export default function InterviewerDetail() {
-export function InterviewerDetail() {
+export default function InterviewerDetail() {
+// export function InterviewerDetail() {
   const [isBookingOpen, setIsBookingOpen] = useState(false)
   const [isProcessingPayment, setIsProcessingPayment] = useState(false)
   const [interviewer, setInterviewer] = useState(null)
@@ -112,11 +112,11 @@ export function InterviewerDetail() {
 
 
   // 客户端拿到登录user
-  const { data: session, status } = useSession()
+  // const { data: session, status } = useSession()
 
   // 会存在多次跳变
   console.log("MMMMM")
-  console.log(session)
+  // console.log(session)
   console.log("MMMMM")
   // if(!session!.user){
   //   alert("用户已登录"+session.user.name)
@@ -418,10 +418,10 @@ export function InterviewerDetail() {
 }
 
 
-export default  function App() {
-  return (
-    <SessionProvider>
-      <InterviewerDetail></InterviewerDetail>
-    </SessionProvider>
-  );
-}
+// export default  function App() {
+//   return (
+//     <SessionProvider>
+//       <InterviewerDetail></InterviewerDetail>
+//     </SessionProvider>
+//   );
+// }
