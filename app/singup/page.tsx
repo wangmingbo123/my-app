@@ -13,7 +13,7 @@ import {Session} from "next-auth";
 
 
 
-export function UserAuthForm() {
+function UserAuthForm() {
   const [isGitHubLoading, setIsGitHubLoading] = React.useState<boolean>(false);
 
   const { data: session, status } = useSession()

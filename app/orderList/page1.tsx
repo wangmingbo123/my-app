@@ -328,8 +328,9 @@ export default function UserOrderList() {
               onChange={(e) => setReviewText(e.target.value)}
             />
           </div>
+          {/*TOOD*/}
           <DialogFooter>
-            <Button onClick={submitReview} disabled={rating === 0}>Submit Review</Button>
+            <Button onClick={()=>submitReview("1")} disabled={rating === 0}>Submit Review</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

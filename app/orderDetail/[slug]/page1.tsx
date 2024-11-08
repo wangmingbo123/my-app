@@ -41,7 +41,7 @@ export default function OrderDetail() {
       
       // For demonstration, we'll use mock data
       setOrder({
-        id: id as string,
+        id: id.toString(),
         interviewerName: "John Doe",
         date: "2024-10-19T14:00:00Z",
         status: 'completed',
