@@ -16,7 +16,7 @@ import { getCurrentUser } from "@/lib/session"
 import { axios } from "@/lib/axios"
 import { SessionProvider } from "next-auth/react";
 import { signIn, useSession } from "next-auth/react";
-import ImageCarousel from "@/components/ImageCarousel";
+import ImageCarousel from "@/components/ImageCarousel1";
 
 // Mock data for the interviewer
 const interviewerNeedMerge = {
@@ -81,6 +81,11 @@ interface Interviewer {
   rating: number;
   reviewCount: number;
 }
+const images = [
+  'https://ibiuepbjxpgufdvklagl.supabase.co/storage/v1/object/public/userinfo/test/demo.jpeg',
+  'https://ibiuepbjxpgufdvklagl.supabase.co/storage/v1/object/public/userinfo/test/demo.jpeg',
+  'https://ibiuepbjxpgufdvklagl.supabase.co/storage/v1/object/public/userinfo/test/demo.jpeg',
+]
 
 const LoadingCircles = () => (
   <div className="flex justify-center items-center space-x-2 h-24">
@@ -100,7 +105,8 @@ export default function InterviewerDetail() {
 
   const [isLoading, setIsLoading] = useState(false)
 
-  const [ordersAndReviews, setOrdersAndReviews] = useState(ordersAndReviewsInfo)
+  // const [ordersAndReviews, setOrdersAndReviews] = useState(ordersAndReviewsInfo)
+  const [ordersAndReviews, setOrdersAndReviews] = useState(null)
 
 
   const { toast } = useToast()
@@ -199,8 +205,10 @@ export default function InterviewerDetail() {
       }
       // interviewerMap["name"] = response.data.interviewer["name"]
       // console.log(interviewerMap)
-      // response.data.interviewer["images"]=["https://ssl.gstatic.com/gb/images/sprites/p_2x_eb7895ba582f.png","https://ssl.gstatic.com/gb/images/sprites/p_2x_eb7895ba582f.png"]
+      response.data.interviewer["images"]=images
+          // ["https://ssl.gstatic.com/gb/images/sprites/p_2x_eb7895ba582f.png","https://ssl.gstatic.com/gb/images/sprites/p_2x_eb7895ba582f.png"]
       setInterviewer(response.data.interviewer)
+      setOrdersAndReviews(response.data.ordersAndReviews)
       // console.log(interviewerMap)
     } catch (err) {
       console.error("Error fetching interviewers:", err)
@@ -215,10 +223,12 @@ export default function InterviewerDetail() {
 
       // 类似商家id
       let interviewerId = params["slug"];
-      const url = "api/orderInterviewerList?interviewerId=" + interviewerId
+      // const url = "api/orderInterviewerList?interviewerId=" + interviewerId
+      // `/interviewer/${interviewer.id}`
+      const url = "api/orderInterviewerList/"+interviewerId
       const response = await axios.get(url)
-      console.log(response.data.orders)
-      setOrdersAndReviews(response.data.orders)
+      console.log(response.data.ordersAndReviews)
+      // setOrdersAndReviews(response.data.ordersAndReviews)
     } catch (err) {
       console.error('Error fetching orders:', err)
     } finally {
@@ -282,6 +292,11 @@ export default function InterviewerDetail() {
           </div>
         </CardHeader>
         <CardContent className="space-y-6">
+          <section>
+            <div className="w-full  mx-auto">
+              <ImageCarousel images={interviewer.images}/>
+            </div>
+          </section>
           <section>
             <h2 className="text-2xl font-semibold mb-2">About Me</h2>
             <p>{interviewer.selfIntroduction}</p>
@@ -385,7 +400,7 @@ export default function InterviewerDetail() {
         </CardHeader>
         <CardContent>
           <div className="space-y-6">
-            {ordersAndReviews.map((order) => (
+            {ordersAndReviews?.map((order) => (
               <div key={order.id} className="border-b pb-4 last:border-b-0">
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center space-x-2">

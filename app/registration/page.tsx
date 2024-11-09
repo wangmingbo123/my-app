@@ -1,7 +1,8 @@
 'use client'
 
-import { useState } from "react"
-import axios from "axios"
+import { useState, useRef } from "react"
+import { useRouter } from 'next/navigation'
+import Image from 'next/image'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -9,65 +10,30 @@ import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/hooks/use-toast"
-import { Loader2, X } from "lucide-react"
-import { useRouter } from 'next/navigation'
-import { Badge } from "@/components/ui/badge"
+import { Loader2, X, Upload } from "lucide-react"
+import {supabase} from "@/lib/supabase";
 
-// Custom MultiSelect component
-const MultiSelect = ({ options, value, onChange, placeholder }) => {
-  const [isOpen, setIsOpen] = useState(false)
+const expertiseOptions = [
+  "Frontend Development",
+  "Backend Development",
+  "Full Stack Development",
+  "Mobile Development",
+  "DevOps",
+  "Data Science",
+  "Machine Learning",
+  "UI/UX Design",
+  "Product Management",
+  "Other"
+]
 
-  const handleSelect = (option) => {
-    const newValue = value.includes(option)
-        ? value.filter(item => item !== option)
-        : [...value, option]
-    onChange(newValue)
-  }
+const bucketName = "userinfo"
 
-  return (
-      <div className="relative">
-        <div
-            className="flex flex-wrap gap-1 p-2 border rounded-md cursor-pointer"
-            onClick={() => setIsOpen(!isOpen)}
-        >
-          {value.length > 0 ? (
-              value.map(item => (
-                  <Badge key={item} variant="secondary" className="mr-1">
-                    {item}
-                    <X
-                        className="ml-1 h-3 w-3 cursor-pointer"
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          handleSelect(item)
-                        }}
-                    />
-                  </Badge>
-              ))
-          ) : (
-              <span className="text-muted-foreground">{placeholder}</span>
-          )}
-        </div>
-        {isOpen && (
-            <div className="absolute z-10 w-full mt-1 bg-background border rounded-md shadow-lg">
-              {options.map(option => (
-                  <div
-                      key={option}
-                      className={`p-2 cursor-pointer hover:bg-accent ${value.includes(option) ? 'bg-accent' : ''}`}
-                      onClick={() => handleSelect(option)}
-                  >
-                    {option}
-                  </div>
-              ))}
-            </div>
-        )}
-      </div>
-  )
-}
-
+// 带文件上传
 export default function InterviewerRegistration() {
   const router = useRouter()
-  const [isSubmitting, setIsSubmitting] = useState(false)
   const { toast } = useToast()
+  const fileInputRef = useRef<HTMLInputElement>(null)
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -75,10 +41,10 @@ export default function InterviewerRegistration() {
     experience: "",
     hourlyRate: "",
     selfIntroduction: "",
-    skills: [],
-    languages: [],
-    availability: [],
+    images: [] as File[],
   })
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [imagePreviews, setImagePreviews] = useState<string[]>([])
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
@@ -89,42 +55,65 @@ export default function InterviewerRegistration() {
     setFormData(prev => ({ ...prev, expertise: value }))
   }
 
-  const handleMultiSelectChange = (name: string) => (value: string[]) => {
-    setFormData(prev => ({ ...prev, [name]: value }))
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || [])
+    setFormData(prev => ({ ...prev, images: [...prev.images, ...files] }))
+    const  url = await handleUpload(files[0])
+    console.log("url "+url)
+
+    const newPreviews = files.map(file => url)
+    // const newPreviews = files.map(file => URL.createObjectURL(file))
+    setImagePreviews(prev => [...prev, ...newPreviews])
   }
 
-  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+  const randomThreeDigitNumber = () => {
+    return Math.floor(Math.random() * 900) + 100;
+  };
+  const handleUpload = async (file:File) =>  {
+    if (!file) return;
+
+    const fileName = randomThreeDigitNumber()+file.name;
+    const {data, error} = await supabase.storage
+        .from(bucketName) // 替换为你的桶名称
+        // .upload(`test/${file.name}`, file);
+        .upload(`test/${fileName}`, file);
+    console.log("handleUpload start")
+    console.log(data)
+    console.log(error)
+    console.log("handleUpload end")
+
+    const {data: {publicUrl}} = supabase.storage
+        .from(bucketName)
+        .getPublicUrl(`test/${fileName}`);
+    console.log(publicUrl);
+    return publicUrl;
+
+  };
+
+  const removeImage = (index: number) => {
+    setFormData(prev => ({
+      ...prev,
+      images: prev.images.filter((_, i) => i !== index)
+    }))
+    setImagePreviews(prev => prev.filter((_, i) => i !== index))
+  }
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setIsSubmitting(true)
-    try {
-      const body = {
-        ...formData,
-        "price": formData.hourlyRate,
-        "userId": 5
-      }
-      console.log(body)
-      const url = "https://smart-excel-ai-omega-six.vercel.app/api/add"
 
-      const response = await axios.post(url, body)
-      console.log(response.data)
+    try {
+      // Here you would typically send the data to your backend
+      // For this example, we'll just simulate an API call
+      await new Promise(resolve => setTimeout(resolve, 2000))
+
       toast({
         title: "Registration Successful",
-        description: "Your registration has been submitted successfully.",
+        description: "Your interviewer profile has been created.",
       })
-      setFormData({
-        name: "",
-        email: "",
-        expertise: "",
-        experience: "",
-        hourlyRate: "",
-        selfIntroduction: "",
-        skills: [],
-        languages: [],
-        availability: [],
-      })
-      router.push("/interviewerList")
+
+      router.push('/interviewer-dashboard') // Redirect to dashboard or confirmation page
     } catch (error) {
-      console.error('Error submitting form:', error)
       toast({
         title: "Registration Failed",
         description: "There was an error submitting your registration. Please try again.",
@@ -136,127 +125,141 @@ export default function InterviewerRegistration() {
   }
 
   return (
-      <Card className="w-full max-w-2xl mx-auto">
-        <CardHeader>
-          <CardTitle>Register as an Interviewer</CardTitle>
-          <CardDescription>Fill out the form below to register as an interviewer on our platform.</CardDescription>
-        </CardHeader>
-        <form onSubmit={onSubmit}>
-          <CardContent className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="name">Full Name</Label>
-              <Input
-                  id="name"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleInputChange}
-                  required
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                  id="email"
-                  name="email"
-                  type="email"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  required
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="expertise">Area of Expertise</Label>
-              <Select onValueChange={handleSelectChange} value={formData.expertise} required>
-                <SelectTrigger id="expertise">
-                  <SelectValue placeholder="Select your area of expertise" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="frontend">Frontend Development</SelectItem>
-                  <SelectItem value="backend">Backend Development</SelectItem>
-                  <SelectItem value="fullstack">Full Stack Development</SelectItem>
-                  <SelectItem value="devops">DevOps</SelectItem>
-                  <SelectItem value="mobile">Mobile Development</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="experience">Years of Experience</Label>
-              <Input
-                  id="experience"
-                  name="experience"
-                  type="number"
-                  min="0"
-                  value={formData.experience}
-                  onChange={handleInputChange}
-                  required
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="hourlyRate">Hourly Rate ($)</Label>
-              <Input
-                  id="hourlyRate"
-                  name="hourlyRate"
-                  type="number"
-                  min="0"
-                  step="0.01"
-                  value={formData.hourlyRate}
-                  onChange={handleInputChange}
-                  required
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="skills">Skills</Label>
-              <MultiSelect
-                  options={["JavaScript", "React", "Node.js", "Python", "Java", "C++", "SQL", "NoSQL", "AWS", "Docker"]}
-                  value={formData.skills}
-                  onChange={handleMultiSelectChange("skills")}
-                  placeholder="Select your skills"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="languages">Languages</Label>
-              <MultiSelect
-                  options={["English", "Mandarin", "Spanish", "French", "German", "Japanese", "Korean", "Russian", "Arabic", "Hindi"]}
-                  value={formData.languages}
-                  onChange={handleMultiSelectChange("languages")}
-                  placeholder="Select languages you speak"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="availability">Availability</Label>
-              <MultiSelect
-                  options={["Weekday Mornings", "Weekday Afternoons", "Weekday Evenings", "Weekend Mornings", "Weekend Afternoons", "Weekend Evenings"]}
-                  value={formData.availability}
-                  onChange={handleMultiSelectChange("availability")}
-                  placeholder="Select your availability"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="selfIntroduction">Self-Introduction</Label>
-              <Textarea
-                  id="selfIntroduction"
-                  name="selfIntroduction"
-                  value={formData.selfIntroduction}
-                  onChange={handleInputChange}
-                  placeholder="Provide a detailed self-introduction. This will be shown to potential clients."
-                  className="h-32"
-                  required
-              />
-            </div>
-          </CardContent>
-          <CardFooter>
-            <Button type="submit" className="w-full" disabled={isSubmitting}>
-              {isSubmitting ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Submitting...
-                  </>
-              ) : (
-                  'Register'
-              )}
-            </Button>
-          </CardFooter>
-        </form>
-      </Card>
+      <div className="container mx-auto p-4">
+        <Card className="w-full max-w-2xl mx-auto">
+          <CardHeader>
+            <CardTitle>Register as an Interviewer</CardTitle>
+            <CardDescription>Fill out the form below to create your interviewer profile.</CardDescription>
+          </CardHeader>
+          <form onSubmit={handleSubmit}>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="name">Full Name</Label>
+                <Input
+                    id="name"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleInputChange}
+                    required
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="email">Email</Label>
+                <Input
+                    id="email"
+                    name="email"
+                    type="email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    required
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="expertise">Area of Expertise</Label>
+                <Select onValueChange={handleSelectChange} value={formData.expertise} required>
+                  <SelectTrigger id="expertise">
+                    <SelectValue placeholder="Select your area of expertise" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {expertiseOptions.map((option) => (
+                        <SelectItem key={option} value={option}>{option}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="experience">Years of Experience</Label>
+                <Input
+                    id="experience"
+                    name="experience"
+                    type="number"
+                    min="0"
+                    value={formData.experience}
+                    onChange={handleInputChange}
+                    required
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="hourlyRate">Hourly Rate ($)</Label>
+                <Input
+                    id="hourlyRate"
+                    name="hourlyRate"
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    value={formData.hourlyRate}
+                    onChange={handleInputChange}
+                    required
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="selfIntroduction">Self Introduction</Label>
+                <Textarea
+                    id="selfIntroduction"
+                    name="selfIntroduction"
+                    value={formData.selfIntroduction}
+                    onChange={handleInputChange}
+                    placeholder="Tell us about yourself, your experience, and why you'd be a great interviewer."
+                    className="h-32"
+                    required
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="images">Profile Images</Label>
+                <div className="flex items-center space-x-4">
+                  <Button type="button" onClick={() => fileInputRef.current?.click()} variant="outline">
+                    <Upload className="mr-2 h-4 w-4" /> Upload Images
+                  </Button>
+                  <Input
+                      id="images"
+                      name="images"
+                      type="file"
+                      accept="image/*"
+                      multiple
+                      onChange={handleImageUpload}
+                      className="hidden"
+                      ref={fileInputRef}
+                  />
+                </div>
+                <div className="grid grid-cols-2 gap-4 mt-4">
+                  {imagePreviews.map((preview, index) => (
+                      <div key={index} className="relative">
+                        <Image
+                            src={preview}
+                            alt={`Preview ${index + 1}`}
+                            width={200}
+                            height={200}
+                            objectFit="cover"
+                            className="rounded-md"
+                        />
+                        <Button
+                            type="button"
+                            variant="destructive"
+                            size="icon"
+                            className="absolute top-2 right-2"
+                            onClick={() => removeImage(index)}
+                        >
+                          <X className="h-4 w-4" />
+                        </Button>
+                      </div>
+                  ))}
+                </div>
+              </div>
+            </CardContent>
+            <CardFooter>
+              <Button type="submit" className="w-full" disabled={isSubmitting}>
+                {isSubmitting ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Submitting...
+                    </>
+                ) : (
+                    'Register'
+                )}
+              </Button>
+            </CardFooter>
+          </form>
+        </Card>
+      </div>
   )
 }

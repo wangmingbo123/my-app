@@ -112,9 +112,9 @@ export default function UserOrderList() {
   }, [])
 
   // 提交评价接口
-  const submitReview = async (orderId: string) => {
+  const submitReview = async (selectedOrder: any) => {
     // 提前缓存好selectedOrder
-    console.log("orderId " + orderId)
+    console.log("orderId " + selectedOrder)
     if (rating === 0) {
       toast({
         title: "Error",
@@ -126,10 +126,12 @@ export default function UserOrderList() {
 
     setIsReviewOpen(true)
     try {
-      await axios.post('/api/submit-review', {
-        orderId,
-        rating,
-        review: reviewText
+      await axios.post('/api/submitReview', {
+        orderId:selectedOrder.id,
+        userId:selectedOrder.userId,
+        interviewerId:selectedOrder.interviewerId,
+        rating:rating,
+        reviewText: reviewText
       })
       toast({
         title: "Success",
@@ -220,7 +222,7 @@ export default function UserOrderList() {
       <h1 className="text-3xl font-bold mb-6">My Orders</h1>
       <div className="space-y-6">
         {orders.map((order) => (
-          <Link href={`/orderDetail/${order.id}`} key={order.id} className="block">
+          // <Link href={`/orderDetail/${order.id}`} key={order.id} className="block">
             <Card key={order.id}>
               <CardHeader className="flex flex-row items-center gap-4">
                 <Avatar>
@@ -263,7 +265,7 @@ export default function UserOrderList() {
                 )}
               </CardFooter>
             </Card>
-          </Link>
+          // </Link>
         ))}
       </div>
 
@@ -332,7 +334,7 @@ export default function UserOrderList() {
             />
           </div>
           <DialogFooter>
-            <Button onClick={() => submitReview(selectedOrder.id)} disabled={rating === 0}>Submit Review</Button>
+            <Button onClick={() => submitReview(selectedOrder)} disabled={rating === 0}>Submit Review</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
