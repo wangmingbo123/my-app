@@ -17,6 +17,7 @@ import { axios } from "@/lib/axios"
 import { toast } from "@/hooks/use-toast"
 
 import Link from "next/link"
+import dayjs from "dayjs";
 
 // Mock data for user's orders
 const orders1 = [
@@ -115,6 +116,7 @@ export default function UserOrderList() {
   const submitReview = async (selectedOrder: any) => {
     // 提前缓存好selectedOrder
     console.log("orderId " + selectedOrder)
+    console.log(selectedOrder)
     if (rating === 0) {
       toast({
         title: "Error",
@@ -126,12 +128,16 @@ export default function UserOrderList() {
 
     setIsReviewOpen(true)
     try {
-      await axios.post('/api/submitReview', {
-        orderId:selectedOrder.id,
-        userId:selectedOrder.userId,
-        interviewerId:selectedOrder.interviewerId,
+      const data = {
+        orderId:String(selectedOrder.id),
+        userId:String(selectedOrder.userId),
+        interviewerId:String(selectedOrder.interviewerId),
         rating:rating,
         reviewText: reviewText
+      }
+      console.log(data)
+      await axios.post('/api/submitReview', {
+             ...data
       })
       toast({
         title: "Success",
@@ -237,20 +243,26 @@ export default function UserOrderList() {
               <CardContent>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="flex items-center">
-                    <Calendar className="mr-2 h-4 w-4" />
+                    <Calendar className="mr-2 h-4 w-4"/>
                     <span>{order.date}</span>
                   </div>
                   <div className="flex items-center">
-                    <Clock className="mr-2 h-4 w-4" />
+                    <Clock className="mr-2 h-4 w-4"/>
                     <span>{order.time} ({order.duration} min)</span>
                   </div>
                   <div className="flex items-center">
-                    <DollarSign className="mr-2 h-4 w-4" />
+                    <DollarSign className="mr-2 h-4 w-4"/>
                     <span>${order.price}</span>
                   </div>
+
                   <div>
-                    <span className={`px-2 py-1 rounded-full text-sm ${order.status === 'Completed' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800'
-                      }`}>
+                    <span>下单时间：</span>
+                    <span>{dayjs(order.createdAt).format('YYYY-MM-DD HH:mm:ss')}</span>
+                  </div>
+                  <div>
+                    <span
+                        className={`px-2 py-1 rounded-full text-sm ${order.status === 'Completed' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800'
+                        }`}>
                       {order.status}
                     </span>
                   </div>
@@ -258,10 +270,13 @@ export default function UserOrderList() {
               </CardContent>
               <CardFooter>
                 {order.status === 'Upcoming' && (
-                  <Button variant="outline" onClick={() => handleReschedule(order)}>Reschedule</Button>
+                    <Button variant="outline" onClick={() => handleReschedule(order)}>Reschedule</Button>
                 )}
                 {order.status === 'Completed' && !order.reviewed && (
-                  <Button variant="outline" onClick={() => handleReview(order)}>Leave Review</Button>
+                    <Button variant="outline" onClick={() => handleReview(order)}>Leave Review</Button>
+                )}
+                {order.status === 'Reviewed'  && (
+                    <Button variant="outline" disabled={true} onClick={() => handleReview(order)}>View Review</Button>
                 )}
               </CardFooter>
             </Card>
