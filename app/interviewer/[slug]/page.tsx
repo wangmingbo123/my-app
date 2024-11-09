@@ -195,8 +195,9 @@ export default function InterviewerDetail() {
   const fetchData = async () => {
     try {
       setIsLoading(true)
+      const { userId } = await getCurrentUser()
       const response = await axios.get(url, {
-        params: { 'search': "A" }
+        params: { 'userId': userId.toString() }
       })
       console.log(response.data.interviewer)
       let interviewerMap = {
@@ -352,7 +353,10 @@ export default function InterviewerDetail() {
         <CardFooter>
           <Dialog open={isBookingOpen} onOpenChange={setIsBookingOpen}>
             <DialogTrigger asChild>
-              <Button className="w-full">Book a Consultation</Button>
+              {
+                interviewer?.coinNum>0?(<Button className="w-full">Book a Consultation</Button>):(<Button className="w-full">积分不足，请去个人页充值</Button>)
+              }
+
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
