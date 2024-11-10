@@ -26,6 +26,7 @@ export default function InterviewerRegistration({user}) {
     const { toast } = useToast()
     const [formData, setFormData] = useState({
         name: "",
+        phone: "",
         email: "",
         expertise: "",
         experience: "",
@@ -122,6 +123,7 @@ export default function InterviewerRegistration({user}) {
             })
             setFormData({
                 name: "",
+                phone: "",
                 email: "",
                 expertise: "",
                 experience: "",
@@ -160,6 +162,16 @@ export default function InterviewerRegistration({user}) {
                             id="name"
                             name="name"
                             value={formData.name}
+                            onChange={handleInputChange}
+                            required
+                        />
+                    </div>
+                    <div className="space-y-2">
+                        <Label htmlFor="Phone">Phone</Label>
+                        <Input
+                            id="phone"
+                            name="phone"
+                            value={formData.phone}
                             onChange={handleInputChange}
                             required
                         />

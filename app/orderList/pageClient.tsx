@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from "react"
-import { Calendar, Clock, DollarSign, Star } from "lucide-react"
+import { Calendar, Clock, DollarSign, Star,Phone } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
@@ -272,6 +272,14 @@ export default function UserOrderList({user}) {
                     </span>
                   </div>
                 </div>
+                <br/>
+                <div className="grid  gap-4">
+                  <div>
+                    <Phone className="mr-2 h-4 w-4"/>
+                    <span>{order.phone} 电话todo</span>
+                  </div>
+                </div>
+
               </CardContent>
               <CardFooter>
                 {order.status === 'Upcoming' && (
