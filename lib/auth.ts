@@ -2,6 +2,7 @@ import { Account, NextAuthOptions, TokenSet } from "next-auth";
 import { JWT } from "next-auth/jwt";
 import GithubProvider from 'next-auth/providers/github';
 import GoogleProvider from 'next-auth/providers/google';
+import redis from "@/lib/redis";
 
 // Here you define the type for the token object that includes accessToken.
 interface ExtendedToken extends TokenSet {
@@ -9,6 +10,7 @@ interface ExtendedToken extends TokenSet {
   userId?: string;
 }
 
+export const ONE_DAY = 3600 * 24
 
 
 
@@ -55,6 +57,18 @@ export const authOptions: NextAuthOptions = {
       // Only on sign in (account only has a value at that time)
       if (account) {
         token.accessToken = account.access_token
+        // 存储访问令牌
+        // Store the access token
+        await storeAccessToken(account.access_token || '', token.sub);
+
+        if (token.sub){
+          // 登录送5次机会
+          const key = getInterviewerUidOrderKey({ userId: token.sub })
+          const orderRedisRes = await redis.get(key)
+          await redis.incrby(key, 5)
+        }
+
+
       }
       token.hello="mmm"
       return token
@@ -70,8 +84,22 @@ export const authOptions: NextAuthOptions = {
       if (session.user){
         // @ts-ignore
           session.user.userId=token.sub
+
+
       }
       return session
     }
   },
+}
+
+async function storeAccessToken(accessToken: string, sub?: string) {
+  if (!accessToken || !sub) return;
+  const expire = ONE_DAY * 30; // The number of seconds in 30 days
+  await redis.set(accessToken, sub, { ex: expire });
+}
+
+
+export const getInterviewerUidOrderKey = ({ userId }: { userId: string }) => {
+  return `uid:${userId}:interviewer`
+  // return `interviewer:${identifier}`
 }
