@@ -12,6 +12,7 @@ import { Loader2, X } from "lucide-react"
 import { useRouter } from 'next/navigation'
 import { Badge } from "@/components/ui/badge"
 import {axios} from "@/lib/axios";
+import {getCurrentUser} from "@/lib/session";
 
 // Custom MultiSelect component
 const MultiSelect = ({ options, value, onChange, placeholder }) => {
@@ -97,10 +98,12 @@ export default function InterviewerRegistration() {
     e.preventDefault()
     setIsSubmitting(true)
     try {
+      const userId = await getCurrentUser()
+
       const body = {
         ...formData,
         "price": formData.hourlyRate,
-        "userId": 5
+        "userId": userId
       }
       console.log(body)
       const url = "/api/add"

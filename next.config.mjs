@@ -2,6 +2,7 @@
 const nextConfig = {
     images: {
         domains: ['ibiuepbjxpgufdvklagl.supabase.co'],
+        formats: ['image/webp'],
     },
 };
 

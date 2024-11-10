@@ -48,8 +48,8 @@ export default async function Home() {
                     <div className="container mx-auto px-4 text-center">
                         <h2 className="text-4xl md:text-5xl font-bold mb-4">提升您的面试技巧，赢得理想工作</h2>
                         <p className="text-xl mb-8">与行业专家一对一交流，获得个性化的面试指导</p>
-                        <Button size="lg" asChild>
-                            <Link href={jumpPath}>立即开始</Link>
+                        <Button size="lg" asChild className="p-8 text-lg">
+                            <Link href={jumpPath}>立即开始,点击注册</Link>
                         </Button>
                     </div>
                 </section>

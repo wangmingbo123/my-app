@@ -1,7 +1,7 @@
 // 'use client'
 
 // 服务端和客户端渲染
-import { getCurrentUser, getCurrentUserServer, getCurrentUserTong } from '@/lib/session'
+import { getCurrentUser, getCurrentUserServer } from '@/lib/session'
 import JobSeekerProfile from './pageClient'
 // import { JobSeekerProfile } from './pageClient'
 

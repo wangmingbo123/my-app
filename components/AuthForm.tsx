@@ -118,7 +118,8 @@ export default function AuthForm() {
         <div className="space-y-4">
           <button
             type="submit"
-            disabled={loading}
+            // disabled={loading}
+            disabled={true}
             className="relative w-full inline-flex items-center justify-center px-6 py-3 text-sm font-medium text-white transition-all duration-200 bg-gradient-to-r from-indigo-600 to-indigo-700 rounded-xl hover:from-indigo-500 hover:to-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_4px_20px_rgba(79,70,229,0.3)] hover:shadow-[0_4px_24px_rgba(79,70,229,0.5)]"
           >
             {loading && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}

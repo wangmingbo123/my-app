@@ -117,13 +117,13 @@ export default function InterviewerDetail() {
   const router = useRouter()
 
 
-  // 客户端拿到登录user
+  // // 客户端拿到登录user
   // const { data: session, status } = useSession()
-
-  // 会存在多次跳变
-  console.log("MMMMM")
+  //
+  // // 会存在多次跳变
+  // console.log("MMMMM")
   // console.log(session)
-  console.log("MMMMM")
+  // console.log("MMMMM")
   // if(!session!.user){
   //   alert("用户已登录"+session.user.name)
   // }
@@ -138,6 +138,7 @@ export default function InterviewerDetail() {
     // const payUrl = "https://smart-excel-ai-omega-six.vercel.app/api/orderAdd";
 
     // const payUrl = "https://noxious-spooky-cauldron-v6rgv6j7xq9hwv6r-3000.app.github.dev/api/orderAdd";
+    // const { data: session, status } = useSession()
     const payUrl = "api/orderAdd";
     const pay = async () => {
       try {
@@ -196,6 +197,8 @@ export default function InterviewerDetail() {
     try {
       setIsLoading(true)
       const { userId } = await getCurrentUser()
+
+
       const response = await axios.get(url, {
         params: { 'userId': userId.toString() }
       })
@@ -206,7 +209,7 @@ export default function InterviewerDetail() {
       }
       // interviewerMap["name"] = response.data.interviewer["name"]
       // console.log(interviewerMap)
-      response.data.interviewer["images"]=images
+      // response.data.interviewer["images"]=images
           // ["https://ssl.gstatic.com/gb/images/sprites/p_2x_eb7895ba582f.png","https://ssl.gstatic.com/gb/images/sprites/p_2x_eb7895ba582f.png"]
       setInterviewer(response.data.interviewer)
       setOrdersAndReviews(response.data.ordersAndReviews)
@@ -240,7 +243,7 @@ export default function InterviewerDetail() {
   useEffect(() => {
     console.log("fetchData is invoke")
     fetchData()
-    fetchOrders()
+    // fetchOrders()
   }, [])
 
   // 通过条件判断的方式
@@ -293,11 +296,14 @@ export default function InterviewerDetail() {
           </div>
         </CardHeader>
         <CardContent className="space-y-6">
-          <section>
-            <div className="w-full  mx-auto">
-              <ImageCarousel images={interviewer.images}/>
-            </div>
-          </section>
+          {interviewer.images && interviewer.images.length>0?
+              (<section>
+                <div className="w-full  mx-auto">
+                  <ImageCarousel images={interviewer.images}/>
+                </div>
+              </section>):''
+          }
+
           <section>
             <h2 className="text-2xl font-semibold mb-2">About Me</h2>
             <p>{interviewer.selfIntroduction}</p>
@@ -312,7 +318,7 @@ export default function InterviewerDetail() {
           </section>
           <section>
             <h2 className="text-2xl font-semibold mb-2">Experience</h2>
-            <p>{interviewer.experience} in {interviewer.expertise}</p>
+            <p>{interviewer.experience} years in {interviewer.expertise}</p>
           </section>
           <section>
             <h2 className="text-2xl font-semibold mb-2">Skills</h2>

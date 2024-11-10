@@ -10,7 +10,7 @@ import { Badge } from "@/components/ui/badge"
 import { Coins, Calendar, CheckCircle } from 'lucide-react'
 import { axios } from '@/lib/axios'
 import { useToast } from '@/hooks/use-toast'
-import { getCurrentUser, getCurrentUserServer, getCurrentUserTong } from '@/lib/session'
+import {  getCurrentUserServer, getCurrentUserTong } from '@/lib/session'
 
 interface SubscriptionPlan {
   name: string
