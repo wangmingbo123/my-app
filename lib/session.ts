@@ -22,7 +22,7 @@ export async function getCurrentUserServer() {
     //测试环境
     if (process.env.NODE_ENV === "development") {
         return {
-            userId: 14872046,
+            userId: 14872047,
         }
     }
     const session = await getServerSession(authOptions)

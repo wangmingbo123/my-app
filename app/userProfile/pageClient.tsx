@@ -10,7 +10,6 @@ import { Badge } from "@/components/ui/badge"
 import { Coins, Calendar, CheckCircle } from 'lucide-react'
 import { axios } from '@/lib/axios'
 import { useToast } from '@/hooks/use-toast'
-import {  getCurrentUserServer, getCurrentUserTong } from '@/lib/session'
 
 interface SubscriptionPlan {
   name: string
@@ -145,6 +144,7 @@ export default function JobSeekerProfile({ user3 }: JobSeekerProfileProps) {
       const response = await axios.get(url, {
         params: { 'search': "A" },
         headers: {
+          "token": userId.toString()
         },
         // withCredentials:true
       })

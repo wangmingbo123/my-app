@@ -39,32 +39,32 @@ const interviewerNeedMerge = {
 }
 
 // Mock data for orders and reviews
-const ordersAndReviewsInfo = [
-  {
-    id: 1,
-    clientName: "John Doe",
-    clientAvatar: "/placeholder.svg?height=50&width=50",
-    date: "2023-05-15",
-    rating: 5,
-    review: "Alice was incredibly helpful! Her insights on React hooks and state management were invaluable. I feel much more confident for my upcoming interview.",
-  },
-  {
-    id: 2,
-    clientName: "Jane Smith",
-    clientAvatar: "/placeholder.svg?height=50&width=50",
-    date: "2023-05-10",
-    rating: 4,
-    review: "Great session on CSS Grid and Flexbox. Alice explained complex concepts in a very understandable way. Looking forward to our next session!",
-  },
-  {
-    id: 3,
-    clientName: "Mike Johnson",
-    clientAvatar: "/placeholder.svg?height=50&width=50",
-    date: "2023-05-05",
-    rating: 5,
-    review: "Alice's mock interview was challenging and realistic. Her feedback was constructive and helped me identify areas for improvement. Highly recommended!",
-  },
-]
+// const ordersAndReviewsInfo = [
+//   {
+//     id: 1,
+//     clientName: "John Doe",
+//     clientAvatar: "/placeholder.svg?height=50&width=50",
+//     date: "2023-05-15",
+//     rating: 5,
+//     review: "Alice was incredibly helpful! Her insights on React hooks and state management were invaluable. I feel much more confident for my upcoming interview.",
+//   },
+//   {
+//     id: 2,
+//     clientName: "Jane Smith",
+//     clientAvatar: "/placeholder.svg?height=50&width=50",
+//     date: "2023-05-10",
+//     rating: 4,
+//     review: "Great session on CSS Grid and Flexbox. Alice explained complex concepts in a very understandable way. Looking forward to our next session!",
+//   },
+//   {
+//     id: 3,
+//     clientName: "Mike Johnson",
+//     clientAvatar: "/placeholder.svg?height=50&width=50",
+//     date: "2023-05-05",
+//     rating: 5,
+//     review: "Alice's mock interview was challenging and realistic. Her feedback was constructive and helped me identify areas for improvement. Highly recommended!",
+//   },
+// ]
 
 interface Interviewer {
   id: number;
@@ -366,7 +366,7 @@ export default function InterviewerDetail({user}) {
           <Dialog open={isBookingOpen} onOpenChange={setIsBookingOpen}>
             <DialogTrigger asChild>
               {
-                interviewer?.coinNum>0?(<Button className="w-full">Book a Consultation</Button>):(<Button className="w-full">积分不足，请去个人页充值</Button>)
+                interviewer?.coinNum>0?(<Button className="w-full">Book a Consultation</Button>):(<Button className="w-full" disabled={true}>积分不足，请去个人页充值</Button>)
               }
 
             </DialogTrigger>

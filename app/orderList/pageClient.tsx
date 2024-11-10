@@ -18,6 +18,7 @@ import { toast } from "@/hooks/use-toast"
 
 import Link from "next/link"
 import dayjs from "dayjs";
+import OrderListEmpty from "@/app/orderList/orderListEmpty";
 
 // Mock data for user's orders
 const orders1 = [
@@ -222,6 +223,9 @@ export default function UserOrderList({user}) {
         </Card>
       </div>
     )
+  }
+  if (!orders || orders.length === 0) {
+    return <OrderListEmpty></OrderListEmpty>
   }
 
   return (
