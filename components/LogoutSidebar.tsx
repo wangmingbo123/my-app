@@ -14,7 +14,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { LogOut, Settings, User } from 'lucide-react'
 import {signOut} from "next-auth/react";
 
-export default function LogoutSidebar() {
+export default function LogoutSidebar({user}) {
   const [open, setOpen] = useState(false)
 
   const handleLogout = () => {
@@ -31,8 +31,8 @@ export default function LogoutSidebar() {
       <SheetTrigger asChild>
         <Button variant="ghost" size="icon" className="rounded-full" aria-label="用户菜单">
           <Avatar>
-            <AvatarImage src="/placeholder.svg?height=32&width=32" alt="用户头像" />
-            <AvatarFallback>用户</AvatarFallback>
+            <AvatarImage src={user?.avatar} alt="用户头像" />
+            <AvatarFallback>{user?.username}</AvatarFallback>
           </Avatar>
         </Button>
       </SheetTrigger>
