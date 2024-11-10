@@ -1,4 +1,4 @@
-import InterviewerList from "@/app/interviewerList/page1";
+import InterviewerList from "@/app/interviewerList/pageClient";
 import {getCurrentUserServer} from "@/lib/session";
 import {UserInfo} from "@/app/userProfile/page";
 

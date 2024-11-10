@@ -19,6 +19,12 @@ export function getCurrentUserTong() {
 
 
 export async function getCurrentUserServer() {
+    //测试环境
+    if (process.env.NODE_ENV === "development") {
+        return {
+            userId: 14872046,
+        }
+    }
     const session = await getServerSession(authOptions)
 
     return session?.user

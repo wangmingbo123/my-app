@@ -43,6 +43,26 @@ const SUBSCRIPTION_VARIANT_KEY = 'subscription'
 interface JobSeekerProfileProps {
   user3?: UserInfo
 }
+const subscriptionPlans: SubscriptionPlan[] = [
+  {
+    name: "Basic",
+    price: 9.99,
+    duration: "Monthly",
+    features: ["5 interview requests", "Basic profile visibility", "Email support"]
+  },
+  {
+    name: "Pro",
+    price: 19.99,
+    duration: "Monthly",
+    features: ["15 interview requests", "Enhanced profile visibility", "Priority email support", "Mock interview sessions"]
+  },
+  {
+    name: "Premium",
+    price: 39.99,
+    duration: "Monthly",
+    features: ["Unlimited interview requests", "Top profile visibility", "24/7 phone support", "Personalized career coaching"]
+  }
+]
 
 
 
@@ -60,27 +80,7 @@ export default function JobSeekerProfile({ user3 }: JobSeekerProfileProps) {
     membershipValidity: "2024-12-31"
   }
 
-  const subscriptionPlans: SubscriptionPlan[] = [
-    {
-      name: "Basic",
-      price: 9.99,
-      duration: "Monthly",
-      features: ["5 interview requests", "Basic profile visibility", "Email support"]
-    },
-    {
-      name: "Pro",
-      price: 19.99,
-      duration: "Monthly",
-      features: ["15 interview requests", "Enhanced profile visibility", "Priority email support", "Mock interview sessions"]
-    },
-    {
-      name: "Premium",
-      price: 39.99,
-      duration: "Monthly",
-      features: ["Unlimited interview requests", "Top profile visibility", "24/7 phone support", "Personalized career coaching"]
-    }
-  ]
-  const { userId } = getCurrentUserTong()
+  const { userId } = {...user3}
 
 
   const handleSubscribe = async (planName: string) => {
