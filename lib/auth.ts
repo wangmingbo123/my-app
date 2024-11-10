@@ -3,6 +3,7 @@ import { JWT } from "next-auth/jwt";
 import GithubProvider from 'next-auth/providers/github';
 import GoogleProvider from 'next-auth/providers/google';
 import redis from "@/lib/redis";
+import {axios} from "@/lib/axios";
 
 // Here you define the type for the token object that includes accessToken.
 interface ExtendedToken extends TokenSet {
@@ -67,6 +68,21 @@ export const authOptions: NextAuthOptions = {
           const key = getInterviewerUidOrderKey({ userId: token.sub })
           const orderRedisRes = await redis.get(key)
           await redis.incrby(key, 5)
+          try {
+            // 发送post请求，同步数据
+            // todo
+            const payUrl = "api/syncUser";
+            const param = {
+              ...token
+            }
+            const response = await axios.post(payUrl, {
+              ...param
+            })
+            console.log("syncUser user")
+            console.log(response)
+          }catch (e) {
+            console.error(e)
+          }
         }
 
 
