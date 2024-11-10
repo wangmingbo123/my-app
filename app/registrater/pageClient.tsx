@@ -110,7 +110,7 @@ export default function InterviewerRegistration({user}) {
             const body = {
                 ...formData,
                 "price": formData.hourlyRate,
-                "userId": userId
+                "userId": String(userId)
             }
             console.log(body)
             const url = "/api/add"
