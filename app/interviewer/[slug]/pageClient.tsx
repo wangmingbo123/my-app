@@ -148,7 +148,7 @@ export default function InterviewerDetail({user}) {
         // const { userId } = await getCurrentUser()
         const { userId } = {...user}
         const param = {
-          userId: userId,
+          userId: parseInt(userId),
           interviewerId: id,
           interviewerName: interviewer.name,
           interviewerAvatar: interviewer.avatar,
