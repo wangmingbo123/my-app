@@ -62,6 +62,7 @@ export const authOptions: NextAuthOptions = {
         await storeAccessToken(account.access_token || '', token.sub);
 
         if (token.sub){
+
           // 登录送5次机会
           const key = getInterviewerUidOrderKey({ userId: token.sub })
           const orderRedisRes = await redis.get(key)
