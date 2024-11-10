@@ -70,10 +70,12 @@ export const authOptions: NextAuthOptions = {
           await redis.incrby(key, 5)
           try {
             // 发送post请求，同步数据
-            // todo
             const payUrl = "api/syncUser";
             const param = {
-              ...token
+              ...token,
+              userId:token.sub,
+              username:token.name,
+              avatar:token.picture
             }
             const response = await axios.post(payUrl, {
               ...param
