@@ -16,7 +16,7 @@ import LogoutSidebar from "@/components/LogoutSidebar";
 // 安装命令
 // npx shadcn@latest add accordion
 export default async function Home() {
-    const user3 = (await getCurrentUserServer()) as UserInfo;
+    const user3 = (await getCurrentUserServer())
     console.log("home page")
     console.log(user3)
 

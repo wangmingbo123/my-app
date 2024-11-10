@@ -31,8 +31,8 @@ export default function LogoutSidebar({user}) {
       <SheetTrigger asChild>
         <Button variant="ghost" size="icon" className="rounded-full" aria-label="用户菜单">
           <Avatar>
-            <AvatarImage src={user?.avatar} alt="用户头像" />
-            <AvatarFallback>{user?.username}</AvatarFallback>
+            <AvatarImage src={user?.image} alt="用户头像" />
+            <AvatarFallback>{user?.name}</AvatarFallback>
           </Avatar>
         </Button>
       </SheetTrigger>
