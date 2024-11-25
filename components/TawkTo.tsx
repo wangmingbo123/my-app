@@ -18,6 +18,7 @@ import { useEffect } from 'react';
 //  成功集成tawk
 const TawkTo: React.FC = () => {
     useEffect(() => {
+        // @ts-ignore
         const Tawk_API: any = window.Tawk_API || {};
         const Tawk_LoadStart = new Date();
 
