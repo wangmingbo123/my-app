@@ -16,7 +16,7 @@ RUN npm install next
 COPY . .
 
 # 构建应用（如果需要）
-RUN npm build
+RUN npm run build
 
 # 暴露应用端口
 EXPOSE 3001
