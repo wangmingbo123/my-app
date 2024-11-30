@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-app-k8s
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: my-app-k8s
+  template:
+    metadata:
+      labels:
+        app: my-app-k8s
+    spec:
+      containers:
+        - name: my-app-k8s
+          image: my-app-k8s/my-app:latest
+          ports:
+            - containerPort: 3001
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-app-k8s
+spec:
+  type: NodePort
+  ports:
+    - port: 3001
+      targetPort: 3001
+      nodePort: 30001  # 可选，指定 NodePort
+  selector:
+    app: my-app-k8s

@@ -1,0 +1,75 @@
+name: Build and Push Docker Image
+
+on:
+  push:
+    branches:
+      - main
+
+
+env:
+  # Use docker.io for Docker Hub if empty
+  REGISTRY: "docker.io"
+  REPOSITORY: my-app-k8s
+  IMAGE_NAME: my-app
+  USERNAME: wangyuyu
+  PASSWORD: Qw19951009
+  TAG1: latest
+
+jobs:
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        run: |
+          pwd
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Log into registry ${{ env.REGISTRY }}
+        uses: docker/login-action@343f7c4344506bcbf9b4de18042ae17996df046d # v3.0.0
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ env.USERNAME }}
+          password: ${{ env.PASSWORD }}
+
+      - name: Build and Push Docker Image
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          push: false
+          tags: ${{ env.REPOSITORY }}/${{ env.IMAGE_NAME }}:${{env.TAG1}}
+
+      - name: Push Docker Image
+        run: docker push ${{ env.REPOSITORY }}/${{ env.IMAGE_NAME }}:${{env.TAG1}}
+  deploy:
+    runs-on: ubuntu-latest
+    needs:
+      - build
+      - test
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Log into registry ${{ env.REGISTRY }}
+        uses: docker/login-action@343f7c4344506bcbf9b4de18042ae17996df046d # v3.0.0
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ env.USERNAME }}
+          password: ${{ env.PASSWORD }}
+
+      - uses: azure/k8s-set-context@v3
+        with:
+          method: kubeconfig
+          kubeconfig: ${{ secrets.KUBECONFIG }}
+      - name: test kubectl
+        run: |
+          kubectl cluster-info
+
+      - name: Deploy to Kubernetes
+        run: |
+          kubectl apply -f k8s.yaml
