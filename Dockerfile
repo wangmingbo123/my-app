@@ -16,10 +16,10 @@ RUN npm install next
 COPY . .
 
 # 构建应用（如果需要）
-RUN next build
+RUN npm build
 
 # 暴露应用端口
 EXPOSE 3001
 
 # 启动应用
-CMD ["next", "start"]
+CMD ["npm", "start"]
