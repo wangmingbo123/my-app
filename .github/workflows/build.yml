@@ -9,7 +9,7 @@ on:
 env:
   # Use docker.io for Docker Hub if empty
   REGISTRY: "docker.io"
-  REPOSITORY: my-app-k8s
+  REPOSITORY: wangyuyu
   IMAGE_NAME: my-app
   USERNAME: wangyuyu
   PASSWORD: Qw19951009

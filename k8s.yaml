@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: my-app-k8s
-          image: my-app-k8s/my-app:latest
+          image: wangyuyu/my-app:latest
           ports:
             - containerPort: 3001
 ---
