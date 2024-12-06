@@ -39,10 +39,10 @@ const SUBSCRIPTION_VARIANT_KEY = 'subscription'
 
 
 export default async function JobSeekerProfileServer() {
-  const user3 = (await getCurrentUserServer()) as UserInfo;
+  const user = (await getCurrentUserServer()) as UserInfo;
   console.log("JobSeekerProfileServer")
-  console.log(user3)
-  return <JobSeekerProfile user3={user3}></JobSeekerProfile>
+  console.log(user)
+  return <JobSeekerProfile user3={user}></JobSeekerProfile>
 
 }
 

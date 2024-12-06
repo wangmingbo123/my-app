@@ -21,3 +21,13 @@ Content-Type: application/json
   "userId": 2,
   "interviewerId": 1
 }
+
+###
+POST http://localhost:3000/api/webhook/clerk
+Content-Type: application/json
+
+{
+  "data": {
+    "id": "user_2pjdSUaodp6QjXI2w2AgmY44ivQ"
+  }
+}

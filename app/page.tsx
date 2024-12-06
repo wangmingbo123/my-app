@@ -12,6 +12,7 @@ import {getCurrentUserServer} from "@/lib/session";
 import {UserInfo} from "@/app/userProfile/page";
 import {useRouter} from "next/navigation";
 import LogoutSidebar from "@/components/LogoutSidebar";
+import {SignedIn, SignedOut, SignInButton, UserButton} from "@clerk/nextjs";
 
 // 安装命令
 // npx shadcn@latest add accordion
@@ -36,9 +37,17 @@ export default async function Home() {
                             <li><Link href="#interviewers" className="hover:underline">面试官</Link></li>
                             <li><Link href="#testimonials" className="hover:underline">评价</Link></li>
                             <li><Link href="#faq" className="hover:underline">FAQ</Link></li>
+                            <li>
+                                <SignedIn>
+                                    <UserButton />
+                                </SignedIn>
+                            </li>
                         </ul>
                     </nav>
-                    {user3?(<LogoutSidebar user={user3}/>):null}
+                    {/*<SignedIn>*/}
+                    {/*    <UserButton />*/}
+                    {/*</SignedIn>*/}
+                    {/*{user3?(<LogoutSidebar user={user3}/>):null}*/}
                 </div>
             </header>
 
@@ -49,7 +58,10 @@ export default async function Home() {
                         <h2 className="text-4xl md:text-5xl font-bold mb-4">提升您的面试技巧，赢得理想工作</h2>
                         <p className="text-xl mb-8">与行业专家一对一交流，获得个性化的面试指导</p>
                         <Button size="lg" asChild className="p-8 text-lg">
-                            <Link href={jumpPath}>立即开始,点击注册</Link>
+                            {/*<Link href={jumpPath}>立即开始,点击注册</Link>*/}
+                            <SignedOut>
+                                <SignInButton >立即开始,点击注册</SignInButton>
+                            </SignedOut>
                         </Button>
                     </div>
                 </section>

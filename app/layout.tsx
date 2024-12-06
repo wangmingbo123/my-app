@@ -6,6 +6,7 @@ import { Toaster } from "@/components/ui/toaster";
 import BottomBar from "@/components/BottomBar";
 import { Analytics } from "@vercel/analytics/react"
 import TawkTo from "@/components/TawkTo";
+import {ClerkProvider} from "@clerk/nextjs";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -33,6 +34,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
+      <ClerkProvider>
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
@@ -44,5 +46,6 @@ export default function RootLayout({
         <TawkTo></TawkTo>
       </body>
     </html>
+      </ClerkProvider>
   );
 }
