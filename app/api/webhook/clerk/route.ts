@@ -8,11 +8,11 @@ export async function POST(request: Request) {
     console.log(request);
     const {
         data: {
-            id
+            user_id
         }
     } = await request.json()
     const token = {
-        sub: id,
+        sub: user_id,
         name: "",
         picture: ""
     }
