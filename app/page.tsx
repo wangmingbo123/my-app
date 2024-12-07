@@ -1,7 +1,7 @@
 import Link from 'next/link'
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import {Button} from "@/components/ui/button"
+import {Card, CardContent} from "@/components/ui/card"
+import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar"
 import {
     Accordion,
     AccordionContent,
@@ -21,9 +21,7 @@ export default async function Home() {
     console.log("home page")
     console.log(user3)
 
-    const  jumpPath = user3?"/interviewerList":"/singup"
-
-
+    const jumpPath = user3 ? "/interviewerList" : "/singup"
 
 
     return (
@@ -39,7 +37,7 @@ export default async function Home() {
                             <li><Link href="#faq" className="hover:underline">FAQ</Link></li>
                             <li>
                                 <SignedIn>
-                                    <UserButton />
+                                    <UserButton/>
                                 </SignedIn>
                             </li>
                         </ul>
@@ -60,7 +58,28 @@ export default async function Home() {
                         <Button size="lg" asChild className="p-8 text-lg">
                             {/*<Link href={jumpPath}>立即开始,点击注册</Link>*/}
                             <SignedOut>
-                                <SignInButton >立即开始,点击注册</SignInButton>
+                                {/*<SignInButton mode="modal">*/}
+                                {/*    */}
+                                {/*    <Button variant="outline" className="bg-white text-black hover:bg-gray-100 hover:text-black border-gray-300">*/}
+                                {/*        立即开始,点击注册*/}
+                                {/*    </Button>*/}
+                                {/*</SignInButton>*/}
+                                <SignInButton mode="modal">
+                                    <Button
+                                        variant="outline"
+                                        className="bg-white text-black border-gray-300
+          hover:bg-blue-500 hover:text-white hover:border-blue-500
+          transition-all duration-300 ease-in-out
+          transform hover:scale-105
+          shadow-md hover:shadow-lg
+        ">
+                                        立即开始,点击注册
+                                    </Button>
+                                </SignInButton>
+
+                                {/*<SignInButton >立即开始,点击注册</SignInButton>*/}
+                                {/*<CusSignInButton></CusSignInButton>*/}
+
                             </SignedOut>
                         </Button>
                     </div>
@@ -72,9 +91,9 @@ export default async function Home() {
                         <h2 className="text-3xl font-bold text-center mb-12">我们的服务特点</h2>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                             {[
-                                { title: "一对一指导", description: "与经验丰富的面试官进行私人交流" },
-                                { title: "模拟面试", description: "体验真实面试环境，提前做好准备" },
-                                { title: "简历优化", description: "获得专业建议，让您的简历脱颖而出" }
+                                {title: "一对一指导", description: "与经验丰富的面试官进行私人交流"},
+                                {title: "模拟面试", description: "体验真实面试环境，提前做好准备"},
+                                {title: "简历优化", description: "获得专业建议，让您的简历脱颖而出"}
                             ].map((feature, index) => (
                                 <Card key={index}>
                                     <CardContent className="p-6">
@@ -93,14 +112,14 @@ export default async function Home() {
                         <h2 className="text-3xl font-bold text-center mb-12">我们的面试官</h2>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                             {[
-                                { name: "张三", role: "技术面试专家", avatar: "/placeholder.svg?height=100&width=100" },
-                                { name: "李四", role: "HR面试顾问", avatar: "/placeholder.svg?height=100&width=100" },
-                                { name: "王五", role: "行为面试专家", avatar: "/placeholder.svg?height=100&width=100" }
+                                {name: "张三", role: "技术面试专家", avatar: "/placeholder.svg?height=100&width=100"},
+                                {name: "李四", role: "HR面试顾问", avatar: "/placeholder.svg?height=100&width=100"},
+                                {name: "王五", role: "行为面试专家", avatar: "/placeholder.svg?height=100&width=100"}
                             ].map((interviewer, index) => (
                                 <Card key={index}>
                                     <CardContent className="p-6 text-center">
                                         <Avatar className="w-24 h-24 mx-auto mb-4">
-                                            <AvatarImage src={interviewer.avatar} alt={interviewer.name} />
+                                            <AvatarImage src={interviewer.avatar} alt={interviewer.name}/>
                                             <AvatarFallback>{interviewer.name[0]}</AvatarFallback>
                                         </Avatar>
                                         <h3 className="text-xl font-semibold mb-2">{interviewer.name}</h3>
@@ -118,13 +137,21 @@ export default async function Home() {
                         <h2 className="text-3xl font-bold text-center mb-12">用户评价</h2>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                             {[
-                                { name: "刘明", comment: "通过一对一指导，我成功通过了梦想公司的面试。非常感谢！", avatar: "/placeholder.svg?height=60&width=60" },
-                                { name: "赵芳", comment: "模拟面试让我对实际面试更有信心。强烈推荐这个服务！", avatar: "/placeholder.svg?height=60&width=60" }
+                                {
+                                    name: "刘明",
+                                    comment: "通过一对一指导，我成功通过了梦想公司的面试。非常感谢！",
+                                    avatar: "/placeholder.svg?height=60&width=60"
+                                },
+                                {
+                                    name: "赵芳",
+                                    comment: "模拟面试让我对实际面试更有信心。强烈推荐这个服务！",
+                                    avatar: "/placeholder.svg?height=60&width=60"
+                                }
                             ].map((testimonial, index) => (
                                 <Card key={index}>
                                     <CardContent className="p-6 flex items-start space-x-4">
                                         <Avatar>
-                                            <AvatarImage src={testimonial.avatar} alt={testimonial.name} />
+                                            <AvatarImage src={testimonial.avatar} alt={testimonial.name}/>
                                             <AvatarFallback>{testimonial.name[0]}</AvatarFallback>
                                         </Avatar>
                                         <div>
@@ -144,9 +171,18 @@ export default async function Home() {
                         <h2 className="text-3xl font-bold text-center mb-12">常见问题</h2>
                         <Accordion type="single" collapsible className="w-full max-w-2xl mx-auto">
                             {[
-                                { question: "如何预约面试咨询？", answer: "您可以在我们的网站上注册账号，然后选择合适的面试官和时间段进行预约。" },
-                                { question: "咨询费用是多少？", answer: "费用因面试官和咨询时长而异。您可以在预约时查看具体价格。我们也提供批量购买优惠。" },
-                                { question: "如果对服务不满意怎么办？", answer: "我们提供100%满意保证。如果您对服务不满意，可以联系客服申请退款或重新安排咨询。" }
+                                {
+                                    question: "如何预约面试咨询？",
+                                    answer: "您可以在我们的网站上注册账号，然后选择合适的面试官和时间段进行预约。"
+                                },
+                                {
+                                    question: "咨询费用是多少？",
+                                    answer: "费用因面试官和咨询时长而异。您可以在预约时查看具体价格。我们也提供批量购买优惠。"
+                                },
+                                {
+                                    question: "如果对服务不满意怎么办？",
+                                    answer: "我们提供100%满意保证。如果您对服务不满意，可以联系客服申请退款或重新安排咨询。"
+                                }
                             ].map((item, index) => (
                                 <AccordionItem key={index} value={`item-${index}`}>
                                     <AccordionTrigger>{item.question}</AccordionTrigger>
