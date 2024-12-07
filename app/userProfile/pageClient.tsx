@@ -123,7 +123,7 @@ export default function JobSeekerProfile({ user3 }: JobSeekerProfileProps) {
       );
       console.log(checkoutURL)
       // window.location.href = checkoutURL;
-      // window.open(checkoutURL, "_blank", "noopener, noreferrer");
+      window.open(checkoutURL, "_blank", "noopener, noreferrer");
     } catch (err) {
       console.log(err);
     }
