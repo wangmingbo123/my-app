@@ -21,8 +21,8 @@ export const ONE_DAY = 3600 * 24
 const clientId = `${process.env.GITHUB_ID}`
 const clientSecret = `${process.env.GITHUB_SECRET}`
 
-console.log("clientId " + clientId)
-console.log("clientSecret " + clientSecret)
+// console.log("clientId " + clientId)
+// console.log("clientSecret " + clientSecret)
 
 export const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,

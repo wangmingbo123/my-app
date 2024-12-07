@@ -2,7 +2,7 @@ import Axios from "axios";
 
 // 基于axios封装一下
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL
-console.log("axios is "+baseUrl)
+// console.log("axios is "+baseUrl)
 
 export const axios = Axios.create({
   baseURL: baseUrl,
