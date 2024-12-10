@@ -1,43 +1,42 @@
-import Link from 'next/link'
-import {Button} from "@/components/ui/button"
-import {Card, CardContent} from "@/components/ui/card"
-import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar"
+import Link from 'next/link';
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
     Accordion,
     AccordionContent,
     AccordionItem,
     AccordionTrigger,
-} from "@/components/ui/accordion"
-import {getCurrentUserServer} from "@/lib/session";
-import {UserInfo} from "@/app/userProfile/page";
-import {useRouter} from "next/navigation";
+} from "@/components/ui/accordion";
+import { getCurrentUserServer } from "@/lib/session";
+import { UserInfo } from "@/app/userProfile/page";
+import { useRouter } from "next/navigation";
 import LogoutSidebar from "@/components/LogoutSidebar";
-import {SignedIn, SignedOut, SignInButton, UserButton} from "@clerk/nextjs";
+import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 
-// 安装命令
+// Installation command
 // npx shadcn@latest add accordion
 export default async function Home() {
-    const user3 = (await getCurrentUserServer())
-    console.log("home page")
-    console.log(user3)
+    const user3 = (await getCurrentUserServer());
+    console.log("home page");
+    console.log(user3);
 
-    const jumpPath = user3 ? "/interviewerList" : "/singup"
-
+    const jumpPath = user3? "/interviewerList" : "/signup";
 
     return (
         <div className="flex flex-col min-h-screen">
             <header className="bg-primary text-primary-foreground py-4">
                 <div className="container mx-auto px-4 flex justify-between items-center">
-                    <h1 className="text-2xl font-bold">面试咨询专家</h1>
+                    <h1 className="text-2xl font-bold">Interview Consulting Experts</h1>
                     <nav>
                         <ul className="flex space-x-4">
-                            <li><Link href="#features" className="hover:underline">特点</Link></li>
-                            <li><Link href="#interviewers" className="hover:underline">面试官</Link></li>
-                            <li><Link href="#testimonials" className="hover:underline">评价</Link></li>
+                            <li><Link href="#features" className="hover:underline">Features</Link></li>
+                            <li><Link href="#interviewers" className="hover:underline">Interviewers</Link></li>
+                            <li><Link href="#testimonials" className="hover:underline">Testimonials</Link></li>
                             <li><Link href="#faq" className="hover:underline">FAQ</Link></li>
                             <li>
                                 <SignedIn>
-                                    <UserButton/>
+                                    <UserButton />
                                 </SignedIn>
                             </li>
                         </ul>
@@ -53,15 +52,15 @@ export default async function Home() {
                 {/* Hero Section */}
                 <section className="bg-gradient-to-r from-primary to-primary-foreground text-white py-20">
                     <div className="container mx-auto px-4 text-center">
-                        <h2 className="text-4xl md:text-5xl font-bold mb-4">提升您的面试技巧，赢得理想工作</h2>
-                        <p className="text-xl mb-8">与行业专家一对一交流，获得个性化的面试指导</p>
+                        <h2 className="text-4xl md:text-5xl font-bold mb-4">Improve Your Interview Skills and Win Your Dream Job</h2>
+                        <p className="text-xl mb-8">Communicate one-on-one with industry experts and get personalized interview guidance.</p>
                         <Button size="lg" asChild className="p-8 text-lg">
-                            {/*<Link href={jumpPath}>立即开始,点击注册</Link>*/}
+                            {/*<Link href={jumpPath}>Start Now, Click to Sign Up</Link>*/}
                             <SignedOut>
                                 {/*<SignInButton mode="modal">*/}
                                 {/*    */}
                                 {/*    <Button variant="outline" className="bg-white text-black hover:bg-gray-100 hover:text-black border-gray-300">*/}
-                                {/*        立即开始,点击注册*/}
+                                {/*        Start Now, Click to Sign Up*/}
                                 {/*    </Button>*/}
                                 {/*</SignInButton>*/}
                                 <SignInButton mode="modal">
@@ -73,11 +72,11 @@ export default async function Home() {
           transform hover:scale-105
           shadow-md hover:shadow-lg
         ">
-                                        立即开始,点击注册
+                                        Start Now, Click to Sign Up
                                     </Button>
                                 </SignInButton>
 
-                                {/*<SignInButton >立即开始,点击注册</SignInButton>*/}
+                                {/*<SignInButton >Start Now, Click to Sign Up</SignInButton>*/}
                                 {/*<CusSignInButton></CusSignInButton>*/}
 
                             </SignedOut>
@@ -88,14 +87,14 @@ export default async function Home() {
                 {/* Features Section */}
                 <section id="features" className="py-16 bg-background">
                     <div className="container mx-auto px-4">
-                        <h2 className="text-3xl font-bold text-center mb-12">我们的服务特点</h2>
+                        <h2 className="text-3xl font-bold text-center mb-12">Features of Our Service</h2>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                             {[
-                                {title: "一对一指导", description: "与经验丰富的面试官进行私人交流"},
-                                {title: "模拟面试", description: "体验真实面试环境，提前做好准备"},
-                                {title: "简历优化", description: "获得专业建议，让您的简历脱颖而出"}
+                                { title: "One-on-One Guidance", description: "Have private communication with experienced interviewers." },
+                                { title: "Mock Interviews", description: "Experience the real interview environment and get well-prepared in advance." },
+                                { title: "Resume Optimization", description: "Get professional suggestions to make your resume stand out." }
                             ].map((feature, index) => (
-                                <Card key={index}>
+                                <Card key= {index}>
                                     <CardContent className="p-6">
                                         <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
                                         <p>{feature.description}</p>
@@ -109,12 +108,12 @@ export default async function Home() {
                 {/* Interviewers Section */}
                 <section id="interviewers" className="py-16 bg-secondary">
                     <div className="container mx-auto px-4">
-                        <h2 className="text-3xl font-bold text-center mb-12">我们的面试官</h2>
+                        <h2 className="text-3xl font-bold text-center mb-12">Our Interviewers</h2>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                             {[
-                                {name: "张三", role: "技术面试专家", avatar: "/placeholder.svg?height=100&width=100"},
-                                {name: "李四", role: "HR面试顾问", avatar: "/placeholder.svg?height=100&width=100"},
-                                {name: "王五", role: "行为面试专家", avatar: "/placeholder.svg?height=100&width=100"}
+                                { name: "Zhang San", role: "Technical Interview Expert", avatar: "/placeholder.svg?height=100&width=100" },
+                                { name: "Li Si", role: "HR Interview Consultant", avatar: "/placeholder.svg?height=100&width=100" },
+                                { name: "Wang Wu", role: "Behavioral Interview Expert", avatar: "/placeholder.svg?height=100&width=100" }
                             ].map((interviewer, index) => (
                                 <Card key={index}>
                                     <CardContent className="p-6 text-center">
@@ -134,17 +133,17 @@ export default async function Home() {
                 {/* Testimonials Section */}
                 <section id="testimonials" className="py-16 bg-background">
                     <div className="container mx-auto px-4">
-                        <h2 className="text-3xl font-bold text-center mb-12">用户评价</h2>
+                        <h2 className="text-3xl font-bold text-center mb-12">User Testimonials</h2>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                             {[
                                 {
-                                    name: "刘明",
-                                    comment: "通过一对一指导，我成功通过了梦想公司的面试。非常感谢！",
+                                    name: "Liu Ming",
+                                    comment: "Through one-on-one guidance, I successfully passed the interview of my dream company. Thank you very much!",
                                     avatar: "/placeholder.svg?height=60&width=60"
                                 },
                                 {
-                                    name: "赵芳",
-                                    comment: "模拟面试让我对实际面试更有信心。强烈推荐这个服务！",
+                                    name: "Zhao Fang",
+                                    comment: "Mock interviews made me more confident in the actual interview. Highly recommend this service!",
                                     avatar: "/placeholder.svg?height=60&width=60"
                                 }
                             ].map((testimonial, index) => (
@@ -168,20 +167,20 @@ export default async function Home() {
                 {/* FAQ Section */}
                 <section id="faq" className="py-16 bg-secondary">
                     <div className="container mx-auto px-4">
-                        <h2 className="text-3xl font-bold text-center mb-12">常见问题</h2>
+                        <h2 className="text-3xl font-bold text-center mb-12">Frequently Asked Questions</h2>
                         <Accordion type="single" collapsible className="w-full max-w-2xl mx-auto">
                             {[
                                 {
-                                    question: "如何预约面试咨询？",
-                                    answer: "您可以在我们的网站上注册账号，然后选择合适的面试官和时间段进行预约。"
+                                    question: "How to book an interview consultation?",
+                                    answer: "You can register an account on our website, and then choose the appropriate interviewer and time period to make a reservation."
                                 },
                                 {
-                                    question: "咨询费用是多少？",
-                                    answer: "费用因面试官和咨询时长而异。您可以在预约时查看具体价格。我们也提供批量购买优惠。"
+                                    question: "What's the consultation fee?",
+                                    answer: "The fee varies depending on the interviewer and the consultation duration. You can check the specific price when making a reservation. We also offer bulk purchase discounts."
                                 },
                                 {
-                                    question: "如果对服务不满意怎么办？",
-                                    answer: "我们提供100%满意保证。如果您对服务不满意，可以联系客服申请退款或重新安排咨询。"
+                                    question: "What should I do if I'm not satisfied with the service?",
+                                    answer: "We offer a 100% satisfaction guarantee. If you're not satisfied with the service, you can contact our customer service to apply for a refund or reschedule the consultation."
                                 }
                             ].map((item, index) => (
                                 <AccordionItem key={index} value={`item-${index}`}>
@@ -196,10 +195,10 @@ export default async function Home() {
                 {/* CTA Section */}
                 <section className="py-16 bg-primary text-primary-foreground">
                     <div className="container mx-auto px-4 text-center">
-                        <h2 className="text-3xl font-bold mb-4">准备好提升您的面试技巧了吗？</h2>
-                        <p className="text-xl mb-8">立即注册，开始您的专业面试咨询之旅</p>
+                        <h2 className="text-3xl font-bold mb-4">Are you ready to improve your interview skills?</h2>
+                        <p className="text-xl mb-8">Sign up now and start your professional interview consulting journey.</p>
                         <Button size="lg" variant="secondary" asChild>
-                            <Link href="/singup">免费注册</Link>
+                            <Link href="/signup">Sign Up for Free</Link>
                         </Button>
                     </div>
                 </section>
@@ -207,7 +206,7 @@ export default async function Home() {
 
             <footer className="bg-background py-8">
                 <div className="container mx-auto px-4 text-center">
-                    <p>&copy; 2024 面试咨询专家. 保留所有权利。</p>
+                    <p>&copy; 2024 Interview Consulting Experts. All rights reserved.</p>
                 </div>
             </footer>
         </div>
