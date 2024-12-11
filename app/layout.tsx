@@ -7,6 +7,7 @@ import BottomBar from "@/components/BottomBar";
 import { Analytics } from "@vercel/analytics/react"
 import TawkTo from "@/components/TawkTo";
 import {ClerkProvider} from "@clerk/nextjs";
+import { GoogleAnalytics } from '@next/third-parties/google'
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -43,6 +44,7 @@ export default function RootLayout({
         <Toaster />
         <BottomBar />
         <Analytics />
+        <GoogleAnalytics gaId="G-1F3RQVVG2X"/>
         <TawkTo></TawkTo>
       </body>
     </html>
